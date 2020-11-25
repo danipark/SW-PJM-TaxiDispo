@@ -22,20 +22,22 @@
         <ion-grid>
       <!------------------- HEADER ----------------------->
           <ion-row class="test">
-            <ion-col> <h5>Datum</h5></ion-col>
+            <ion-col><h5>Datum</h5></ion-col>
             <ion-col><h5>Startpunk</h5></ion-col>
             <ion-col><h5>Zielpunkt</h5></ion-col>
             <ion-col><h5>Distanz</h5></ion-col>
             <ion-col><h5>Preis</h5></ion-col>
+            <ion-col></ion-col>
           </ion-row>
   
     <!------------------- TABLE ----------------------->
           <ion-row *ngFor="let item of mergedObject">
-            <ion-col>{{item.date}}</ion-col>
-            <ion-col>{{item.startPoint}}</ion-col>
-            <ion-col>{{item.endPoint}}</ion-col>
-            <ion-col>{{item.completeDistance}} km</ion-col>
-            <ion-col>{{item.price}} €</ion-col>
+            <ion-col >{{item.date}}</ion-col>
+            <ion-col >{{item.startPoint}}</ion-col>
+            <ion-col >{{item.endPoint}}</ion-col>
+            <ion-col >{{item.completeDistance}} km</ion-col>
+            <ion-col >{{item.price}} €</ion-col>
+            <ion-col><ion-button name="print" color="warning"><ion-icon name="print"></ion-icon></ion-button></ion-col>
           </ion-row>
       </ion-grid>
     </ion-card>
