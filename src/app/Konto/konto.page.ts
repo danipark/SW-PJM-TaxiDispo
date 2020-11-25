@@ -43,8 +43,8 @@ export class KontoPage {
     setTimeout(() => {
       this.mergedObject = this.TaxiRoutes.map((item, i) => Object.assign({}, item, this.Journeys[i]))
       for (var i = 0; i < this.mergedObject.length; i++) {
-        this.mergedObject[i].price = Math.round(this.mergedObject[i].price + Number.EPSILON)/100;
-        this.mergedObject[i].completeDistance = Math.round(this.mergedObject[i].completeDistance + Number.EPSILON)/100; 
+        this.mergedObject[i].price = Math.round(this.mergedObject[i].price *100)/100;
+        this.mergedObject[i].completeDistance = Math.round(this.mergedObject[i].completeDistance * 100)/100; 
       }
       console.log(this.mergedObject)
     }, 1000)
