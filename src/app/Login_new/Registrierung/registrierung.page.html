@@ -1,0 +1,64 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Registrierung</ion-title>
+  </ion-toolbar>
+</ion-header>
+ 
+<ion-content padding>
+  
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    
+     
+    <ion-item>
+      <ion-label position="floating">Email</ion-label>
+      <ion-input type="email" formControlName="email"></ion-input>
+    </ion-item>
+ 
+    <ion-item>
+      <ion-label position="floating">Password</ion-label>
+      <ion-input type="password" formControlName="password"></ion-input>
+    </ion-item>
+    
+    <ion-item>
+      <ion-label position="floating">Vorname</ion-label>
+      <ion-input formControlName="firstName"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Nachname</ion-label>
+      <ion-input formControlName="lastName"></ion-input>
+    </ion-item>
+   
+        
+  
+    <ion-radio-group (ionChange)="radioGroupChange($event)">
+      <ion-list-header>
+        <ion-label>Privat oder Geschäftskunde?</ion-label>
+      </ion-list-header>
+     
+      <ion-item>
+        <ion-label>Privatkunde</ion-label>
+        <ion-radio slot="start" value="Privatkunde"></ion-radio>
+      </ion-item>
+  
+      <ion-item>
+        <ion-label>Geschäftskunde</ion-label>
+        <ion-radio slot="start" value="Geschäftskunde"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+
+    <ion-item *ngIf="selectedRadioGroup === 'Geschäftskunde'">
+        <ion-label position="floating">Unternehmensname</ion-label>
+        <ion-input formControlName="companyName"></ion-input>
+    </ion-item>
+    
+    <ion-col>
+      
+        <div id="geocoder" class="geocoder"></div>
+      
+      </ion-col>
+   
+
+    <ion-button expand="full" type="submit">Registrierung</ion-button>
+ 
+  </form>

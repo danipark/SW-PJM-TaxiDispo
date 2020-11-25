@@ -1,0 +1,74 @@
+<ion-header [translucent]="true">
+    <ion-toolbar color="warning">
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>
+            Dashboard
+        </ion-title>
+    </ion-toolbar>
+</ion-header>
+
+
+<ion-content [fullscreen]="true">
+    <ion-header collapse="condense">
+        <ion-toolbar>
+            <ion-title size="large">Dashboard</ion-title>
+        </ion-toolbar>
+    </ion-header>
+
+
+    <ion-list-header color="light">Kilometer-Dashboard</ion-list-header>
+    <ion-card>
+        <ion-card-header>
+            <ion-card-subtitle>Gefahrene Kilometer</ion-card-subtitle>
+            <ion-card-title>2020</ion-card-title>
+        </ion-card-header>
+        von <select [(ngModel)]="fromMonth" style="width: 150px; height: 30px;">
+          <option *ngFor="let m of months" [value]="m.value">{{m.month}}</option>
+        </select> bis <select [(ngModel)]="toMonth" style="width: 150px;height: 30px;">
+          <option *ngFor="let m1 of months" [value]='m1.value'>{{m1.month}}</option>
+        </select><br>
+        <ion-button color="warning" style="width: 150px; height: 30px;" (click)="applyMonthFilterBarChartKM()">
+            Monatsfilter
+        </ion-button>
+        <ion-card-content class="welcome-card">
+            <canvas #barChartKM></canvas>
+        </ion-card-content>
+    </ion-card>
+
+    <ion-list-header color="light">Umsatz-Dashboard</ion-list-header>
+    <ion-card>
+        <ion-card-header>
+            <ion-card-subtitle>Erzielter Umsatz pro Monat</ion-card-subtitle>
+            <ion-card-title>2020</ion-card-title>
+        </ion-card-header>
+        von <select [(ngModel)]="fromMonth" style="width: 150px; height: 30px;">
+          <option *ngFor="let m of months" [value]="m.value">{{m.month}}</option>
+        </select> bis <select [(ngModel)]="toMonth" style="width: 150px;height: 30px;">
+          <option *ngFor="let m1 of months" [value]='m1.value'>{{m1.month}}</option>
+        </select><br>
+        <ion-button color="warning" style="width: 150px; height: 30px;" (click)="applyMonthFilterBarChartSales()">
+            Monatsfilter
+        </ion-button>
+        <ion-card-content class="welcome-card1">
+            <canvas #barChartSales></canvas>
+        </ion-card-content>
+    </ion-card>
+    <ion-card>
+        <ion-card-header>
+            <ion-card-subtitle>Umsatz pro Monat in %</ion-card-subtitle>
+            <ion-card-title>2020</ion-card-title>
+        </ion-card-header>
+        <ion-card-content class="pieChart2">
+            <canvas #pieChartSales></canvas>
+        </ion-card-content>
+    </ion-card>
+    <br>
+    <br>
+    <br>
+
+
+
+
+</ion-content>

@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-toolbar color="warning">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Konto
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <br> 
+      <h4> Punkte: </h4>
+    <br>
+  </ion-card>
+
+  <ion-scroll scrollX="true" scrollY="true" zoom="false" no-padding>
+    <ion-card>
+      <h4> Taxifahrten: </h4>
+        <ion-grid>
+      <!------------------- HEADER ----------------------->
+       
+          <ion-row class="test">
+            <ion-col> <h5>Datum</h5></ion-col>
+            <ion-col><h5>Startpunk</h5></ion-col>
+            <ion-col><h5>Zielpunkt</h5></ion-col>
+            <ion-col><h5>Distanz</h5></ion-col>
+            <ion-col><h5>Preis</h5></ion-col>
+          </ion-row>
+  
+    <!------------------- TABLE ----------------------->
+      
+          <ion-row *ngFor="let item of mergedObject">
+            <ion-col>{{item.date}}</ion-col>
+            <ion-col>{{item.startPoint}}</ion-col>
+            <ion-col>{{item.endPoint}}</ion-col>
+            <ion-col>{{item.completeDistance}} km</ion-col>
+            <ion-col>{{item.price}} €</ion-col>
+          </ion-row>
+      </ion-grid>
+    </ion-card>
+  </ion-scroll>
+</ion-content>
