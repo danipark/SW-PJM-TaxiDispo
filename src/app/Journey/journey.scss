@@ -1,86 +1,94 @@
-.map_box_container{
-       position: relative;
-       height: 100% !important;
-       width: 100% !important;
-     }
-     
-#map {
-       position: absolute;
-       top: 0;
-       bottom: 0;
-       width: 100% !important;
+.map_box_container {
+    position: relative;
+    height: 100% !important;
+    width: 100% !important;
 }
+
+#map {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100% !important;
+}
+
 #searchbar {
-       position: relative;
+    position: relative;
 }
 
 #vorschläge {
-       position: absolute;
-       width: 100%;
-       z-index: 999;
+    position: absolute;
+    width: 100%;
+    z-index: 999;
 }
 
-.startpoint {
-       position: absolute;
-       z-index: 1;
-       width: 80%;
-       left: 50%;
-       margin-left: -25%;
-       top: 30px;
-
+.start {
+    position: absolute;
+    z-index: 3;
+    width: 35%;
+    left: 55%;
+    margin-left: -25%;
+    top: 20px;
 }
 
-.geocoder {
-       position: absolute;
-       z-index: 2;
-       width: 50%;
-       left: 50%;
-       margin-left: -25%;
-       top: 70px;
-       }
+.geocoderstart {
+    position: absolute;
+    z-index: 3;
+    width: 35%;
+    left: 50%;
+    margin-left: -25%;
+    top: 180px;
+}
+
+.geocoderziel {
+    position: absolute;
+    z-index: 2;
+    width: 50%;
+    left: 50%;
+    margin-left: -25%;
+    top: 230px;
+}
 
 .date {
-       position: absolute;
-       z-index: 1;
-       width: 50%;
-       left: 50%;
-       margin-left: -25%;
-       top: 110px;
-              }
+    position: absolute;
+    z-index: 1;
+    width: 50%;
+    left: 50%;
+    margin-left: -25%;
+    top: 270px;
+}
 
 .time {
-       position: absolute;
-       z-index: 1;
-       width: 50%;
-       left: 50%;
-       margin-left: -25%;
-       top: 140px;
-                            }
+    position: absolute;
+    z-index: 1;
+    width: 50%;
+    left: 50%;
+    margin-left: -25%;
+    top: 300px;
+}
 
 .NumberOfPerson {
-       position: absolute;
-       z-index: 1;
-       width: 50%;
-       left: 50%;
-       margin-left: -25%;
-       top: 170px;
+    position: absolute;
+    z-index: 1;
+    width: 50%;
+    left: 50%;
+    margin-left: -25%;
+    top: 330px;
 }
 
 .Payment {
-       position: absolute;
-       z-index: 1;
-       width: 50%;
-       left: 50%;
-       margin-left: -25%;
-       top: 200px;
-}
-.Buchen {
-       position: absolute;
-       z-index: 1;
-       width: 50%;
-       left: 50%;
-       margin-left: -25%;
-       top: 230px;
+    position: absolute;
+    z-index: 1;
+    width: 50%;
+    left: 50%;
+    margin-left: -25%;
+    top: 360px;
 }
 
-       
+.Buchen {
+    position: absolute;
+    z-index: 1;
+    width: 50%;
+    left: 50%;
+    margin-left: -25%;
+    top: 400px;
+}

@@ -1,86 +1,97 @@
 <ion-header [translucent]="true">
-  <ion-toolbar color="warning">
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>
-      Taxi buchen
-    </ion-title>
-  </ion-toolbar>
+    <ion-toolbar color="warning">
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>
+            Taxi buchen
+        </ion-title>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Taxi buchen</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  <section class="map_box_container">
-    <!--MAP-->
-    <div id='map'></div>
-  </section>
-  
-</ion-content> 
+    <ion-header collapse="condense">
+        <ion-toolbar>
+            <ion-title size="large">Taxi buchen</ion-title>
+        </ion-toolbar>
+    </ion-header>
+    <section class="map_box_container">
+        <!--MAP-->
+        <div id='map'></div>
+    </section>
 
-  <ion-content>
+</ion-content>
+
+<ion-content>
     <ion-grid>
-      <ion-row>
-        <ion-col offset=4 size = 4>
-          <ion-input class="startpoint"> {{startPoint}} </ion-input>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col offset=4 size=4>
-          <div id="geocoder" class="geocoder" (select)="createRoute()"></div>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col offset=4 size=4>
-        <ion-datetime class="date" [(ngModel)] = "date" min="2020-01-01" max="2020-12-31" 
-          dayShortNames="Montag, Dienstag, Mittwoch, Donnerstag, Freitag, Samstag, Sonntag"monthShortNames="Januar, Februar, März, April, Mai, Juni, Juli, August, September, Oktober, November, Dezember"
-          cancelText="Abbrechen" doneText="Fertig"
-          placeholder="Datum eingeben"></ion-datetime>
-        </ion-col>
+        <ion-row>
+            <ion-col class="start">
+                <ion-radio-group [(ngModel)]="startType">
+                    <ion-list-header>
+                        <ion-label>Startpunkt auswählen</ion-label>
+                    </ion-list-header>
+
+                    <ion-item>
+                        <ion-label>Aktueller Standort: {{startPoint}}</ion-label>
+                        <ion-radio slot="start" value="GPS"></ion-radio>
+                    </ion-item>
+
+                    <ion-item>
+                        <ion-label>Anderen Standort auswählen:</ion-label>
+                        <ion-radio slot="start" value="Eingabe" (click)="geocoderst()" [disabled]="disableButton"></ion-radio>
+                    </ion-item>
+                </ion-radio-group>
+
+            </ion-col>
+        </ion-row>
+
+        <ion-row>
+            <ion-col offset=4 size=4>
+                <div id="geocoderstart" class="geocoderstart"></div>
+            </ion-col>
         </ion-row>
         <ion-row>
-        <ion-col offset=4 size=4>
-        <ion-datetime class="time" [(ngModel)] = "time" displayFormat="HH:mm" 
-        cancelText="Abbrechen" doneText="Fertig"
-        placeholder="Uhrzeit eingeben"></ion-datetime>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col offset=4 size=4>
-        <ion-select class="NumberOfPerson" [(ngModel)] = "numberOfPersons" placeholder="Personenanzahl">
-          <ion-select-option value="1">1</ion-select-option>
-          <ion-select-option value="2">2</ion-select-option>
-          <ion-select-option value="3">3</ion-select-option>
-          <ion-select-option value="4">4</ion-select-option>
-          <ion-select-option value="5">5</ion-select-option>
-          <ion-select-option value="6">6</ion-select-option>
-          <ion-select-option value="7">7</ion-select-option>
-        </ion-select>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col offset=4 size=4>
-        <ion-select class="Payment" [(ngModel)] = "paymentType" placeholder="Bezahlung">
-          <ion-select-option value="bar">Bar</ion-select-option>
-          <ion-select-option value="paypal">PayPal</ion-select-option>
-        </ion-select>
-      </ion-col>
-    </ion-row>
+            <ion-col offset=4 size=4>
+                <div id="geocoderziel" class="geocoderziel" (select)="createRoute()"></div>
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col offset=4 size=4>
+                <ion-datetime class="date" [(ngModel)]="date" min="2020-01-01" max="2020-12-31" dayShortNames="Montag, Dienstag, Mittwoch, Donnerstag, Freitag, Samstag, Sonntag" monthShortNames="Januar, Februar, März, April, Mai, Juni, Juli, August, September, Oktober, November, Dezember"
+                    cancelText="Abbrechen" doneText="Fertig" placeholder="Datum eingeben"></ion-datetime>
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col offset=4 size=4>
+                <ion-datetime class="time" [(ngModel)]="time" displayFormat="HH:mm" cancelText="Abbrechen" doneText="Fertig" placeholder="Uhrzeit eingeben"></ion-datetime>
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col offset=4 size=4>
+                <ion-select class="NumberOfPerson" [(ngModel)]="numberOfPersons" placeholder="Personenanzahl">
+                    <ion-select-option value="1">1</ion-select-option>
+                    <ion-select-option value="2">2</ion-select-option>
+                    <ion-select-option value="3">3</ion-select-option>
+                    <ion-select-option value="4">4</ion-select-option>
+                    <ion-select-option value="5">5</ion-select-option>
+                    <ion-select-option value="6">6</ion-select-option>
+                    <ion-select-option value="7">7</ion-select-option>
+                </ion-select>
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col offset=4 size=4>
+                <ion-select class="Payment" [(ngModel)]="paymentType" placeholder="Bezahlung">
+                    <ion-select-option value="bar">Bar</ion-select-option>
+                    <ion-select-option value="paypal">PayPal</ion-select-option>
+                </ion-select>
+            </ion-col>
+        </ion-row>
 
-    <ion-row>
-      <ion-col offset=4 size=4>
-        <ion-button class="Buchen" (click)="createJourney()" color="warning">Taxifahrt buchen</ion-button>
-      </ion-col>
-    </ion-row>
+        <ion-row>
+            <ion-col offset=4 size=4>
+                <ion-button class="Buchen" (click)="createJourney()" color="warning">Taxifahrt buchen</ion-button>
+            </ion-col>
+        </ion-row>
     </ion-grid>
-  </ion-content>
-
-  
-  
-
-  
-
+</ion-content>

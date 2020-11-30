@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { TaxirouteService } from '../TaxiCompany/TaxiManagement/Services/taxiroute.service';
 import { JourneyService } from '../Journey/Services/journey.service';
 import { AuthService } from '../Login_new/services/auth.service';
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
   selector: 'app-konto',
@@ -9,7 +12,8 @@ import { AuthService } from '../Login_new/services/auth.service';
   styleUrls: ['./konto.page.scss'],
 })
 export class KontoPage {
-  
+
+   
   TaxiRoutes: any = [];
   Journeys: any = [];
   mergedObject: any = [];
@@ -50,5 +54,10 @@ export class KontoPage {
     }, 1000)
   }
 
+
+  generatePdf(){
+    const documentDefinition = {content: 'Hier könnte ihre Taxifahrt stehen' }
+        pdfMake.createPdf(documentDefinition).open();
+   }
   
 }

@@ -61,7 +61,9 @@ export class JourneyPage {
   
     addresses: string[] = [];
     selectedAddress = null;
-    geocoder: any;
+    geocoderstart: any;
+    geocoderziel: any;  
+    startType= "";
     
     latSearch: any;
     lngSearch: any;
@@ -79,6 +81,7 @@ export class JourneyPage {
     price: number;
     routeDistance: number;
     routeDuration: number;
+    
 
     //Payment
     paymentType: string="";
@@ -90,6 +93,10 @@ export class JourneyPage {
     currentUser: any;
 
     test: string="";
+
+    //Button nur 1x klicken
+    disableButton;
+    
   ngOnInit() {
     
     this.taxiService.getTaxiList().subscribe((res) => {
@@ -120,7 +127,7 @@ export class JourneyPage {
     var url = "https://api.mapbox.com/geocoding/v5/mapbox.places/" +this.longitude+"," + this.latitude + ".json?language=de&access_token=" +environment.mapboxKey;
     this.http.get(url).subscribe((results: any) => {  
       this.startPoint = results.features[0].place_name;
-      this.test = this.startPoint;
+     // this.test = this.startPoint;
     });
   }
 
@@ -157,17 +164,17 @@ export class JourneyPage {
 
       }
       
-      //Geocoder
-       this.geocoder = new MapboxGeocoder({
-        accessToken: environment.mapboxKey,
-        countries: 'de',
-        placeholder: this.test,
-        mapboxgl: Mapboxgl
-        });
-        document.getElementById('geocoder').appendChild(this.geocoder.onAdd(this.map)); 
+      //Geocoderziel
+      this.geocoderziel = new MapboxGeocoder({
+     accessToken: environment.mapboxKey,
+      countries: 'de',
+      placeholder: 'Zieladresse eingeben',
+      mapboxgl: Mapboxgl
+      });
+      document.getElementById('geocoderziel').appendChild(this.geocoderziel.onAdd(this.map));
         
         var self = this;
-         this.geocoder.on('clear', function(e) {
+         this.geocoderziel.on('clear', function(e) {
             var layer = self.map.getLayer;
             if (this.layer = 'route') {
               self.map.removeLayer('route');
@@ -177,16 +184,37 @@ export class JourneyPage {
         });      
       }, 2000);     
   }
+
+  geocoderst(){
+    this.sendGetRequest();
+    this.geocoderstart = new MapboxGeocoder({
+    accessToken: environment.mapboxKey,
+    countries: 'de',
+    placeholder: 'Startpunkt eingeben',
+    mapboxgl: Mapboxgl
+    });
+    //this.geocoderstart.addTo('#geocoderstart');
+    document.getElementById('geocoderstart').appendChild(this.geocoderstart.onAdd(this.map));
+    this.disableButton = true;
+    }
  
   createRoute() {
-    var geocoderJSON = this.geocoder.lastSelected;
+    var geocoderJSON = this.geocoderziel.lastSelected;
     let geocoderObject = JSON.parse(geocoderJSON); 
     this.endPoint = geocoderObject.place_name;
 
-    this.latSearch = this.geocoder.mapMarker._lngLat.lat;
-    this.lngSearch = this.geocoder.mapMarker._lngLat.lng;
+    this.latSearch = this.geocoderziel.mapMarker._lngLat.lat;
+    this.lngSearch = this.geocoderziel.mapMarker._lngLat.lng;
+
+    if (this.startType == 'Eingabe'){
+      this.latitude = this.geocoderstart.mapMarker._lngLat.lat;
+      this.longitude = this.geocoderstart.mapMarker._lngLat.lng;
+      var geocoderJSON = this.geocoderstart.lastSelected;
+      let geocoderObject = JSON.parse(geocoderJSON);
+      this.startPoint = geocoderObject.place_name;
+      }
      
-    console.log(this.geocoder)
+    console.log(this.geocoderziel)
     var urlDirections = "https://api.mapbox.com/directions/v5/mapbox/driving-traffic/" +this.longitude + "," +this.latitude + ";" 
     +this.lngSearch +"," +this.latSearch + "?overview=full&annotations=duration,distance&geometries=geojson" +"&access_token=" 
     +environment.mapboxKey ;
@@ -313,7 +341,7 @@ export class JourneyPage {
       message: 'Ihr Taxi wurde erfolgreich gebucht. Die Kosten betragen: ' +price +"€",
       buttons: ['OK']
     });
-    this.geocoder.clear();
+    this.geocoderziel.clear();
     this.date = "";
     this.time = "";
     this.numberOfPersons = 0;
