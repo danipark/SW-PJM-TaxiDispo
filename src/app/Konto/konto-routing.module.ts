@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { KontoPage } from './konto.page';
+import { KontoPage } from './kontoController';
 
 const routes: Routes = [
   {

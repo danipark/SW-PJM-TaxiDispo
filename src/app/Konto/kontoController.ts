@@ -8,8 +8,8 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
   selector: 'app-konto',
-  templateUrl: './konto.page.html',
-  styleUrls: ['./konto.page.scss'],
+  templateUrl: './kontoView.html',
+  styleUrls: ['./konto.scss'],
 })
 export class KontoPage {
 

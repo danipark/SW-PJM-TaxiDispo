@@ -6,7 +6,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { KontoPageRoutingModule } from './konto-routing.module';
 
-import { KontoPage } from './konto.page';
+import { KontoPage } from './kontoController';
 
 @NgModule({
   imports: [

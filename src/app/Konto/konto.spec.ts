@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { KontoPage } from './konto.page';
+import { KontoPage } from './kontoController';
 
 describe('KontoPage', () => {
   let component: KontoPage;
