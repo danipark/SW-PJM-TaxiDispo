@@ -6,7 +6,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { RegistrierungPageRoutingModule } from './registrierung-routing.module';
 
-import { RegistrierungPage } from './registrierung.page';
+import { RegistrierungPage } from './registrierungController';
 
 @NgModule({
   imports: [

@@ -7,8 +7,8 @@ import * as Mapboxgl from 'mapbox-gl'
 
 @Component({
   selector: 'app-registrierung',
-  templateUrl: './registrierung.page.html',
-  styleUrls: ['./registrierung.page.scss'],
+  templateUrl: './registrierungView.html',
+  styleUrls: ['./registrierung.scss'],
 })
 export class RegistrierungPage implements OnInit {
 
