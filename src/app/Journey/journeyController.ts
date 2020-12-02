@@ -39,6 +39,8 @@ export class JourneyPage {
   //Koordinaten
   public latitude: number;
   public longitude: number;
+  public latitude2: number;
+  public longitude2: number;
   public map: Mapboxgl.Map;
   Taxis: any = [];
   dateFormat: any;
@@ -63,8 +65,8 @@ export class JourneyPage {
     selectedAddress = null;
     geocoderstart: any;
     geocoderziel: any;  
-    startType= "";
-    
+    urlDirectionsStart: any;
+    geocoderObjectStart: any;
     latSearch: any;
     lngSearch: any;
     
@@ -112,12 +114,15 @@ export class JourneyPage {
 
       this.latitude = resp.coords.latitude;
       this.longitude = resp.coords.longitude;
-      
+      var url = "https://api.mapbox.com/geocoding/v5/mapbox.places/" +this.longitude+"," + this.latitude + ".json?language=de&access_token=" +environment.mapboxKey;
+      this.http.get(url).subscribe((results: any) => {  
+        this.startPoint = results.features[0].place_name;
+      });
     }).catch((error) => {
       alert('Error getting location' + JSON.stringify(error));
-    });
+    })
 
-     
+   
     
     //https://api.mapbox.com/geocoding/v5/mapbox.places/-73.989,40.733.json?access_token=
     
@@ -127,7 +132,7 @@ export class JourneyPage {
     var url = "https://api.mapbox.com/geocoding/v5/mapbox.places/" +this.longitude+"," + this.latitude + ".json?language=de&access_token=" +environment.mapboxKey;
     this.http.get(url).subscribe((results: any) => {  
       this.startPoint = results.features[0].place_name;
-     // this.test = this.startPoint;
+     this.test = this.startPoint;
     });
   }
 
@@ -163,19 +168,39 @@ export class JourneyPage {
          
 
       }
-      
-      //Geocoderziel
+
+      //Geocoderstart
+      this.geocoderstart = new MapboxGeocoder({
+        accessToken: environment.mapboxKey,
+        countries: 'de',
+        placeholder: this.startPoint,
+        mapboxgl: Mapboxgl
+      });
+      document.getElementById('geocoderstart').appendChild(this.geocoderstart.onAdd(this.map));
+      var self = this;
+         this.geocoderstart.on('clear', function(e) {
+          self.sendGetRequest();
+          this.geocoderObjectStart = null;
+          var layer = self.map.getLayer;
+            if (this.layer = 'route') {
+              self.map.removeLayer('route');
+              self.map.removeSource('route');
+            } else {
+          } 
+        });
+          //Geocoderziel
       this.geocoderziel = new MapboxGeocoder({
-     accessToken: environment.mapboxKey,
-      countries: 'de',
-      placeholder: 'Zieladresse eingeben',
-      mapboxgl: Mapboxgl
+        accessToken: environment.mapboxKey,
+        countries: 'de',
+        placeholder: 'Zielpunkt eingeben',
+        mapboxgl: Mapboxgl
       });
       document.getElementById('geocoderziel').appendChild(this.geocoderziel.onAdd(this.map));
         
         var self = this;
          this.geocoderziel.on('clear', function(e) {
-            var layer = self.map.getLayer;
+          
+          var layer = self.map.getLayer;
             if (this.layer = 'route') {
               self.map.removeLayer('route');
               self.map.removeSource('route');
@@ -185,40 +210,55 @@ export class JourneyPage {
       }, 2000);     
   }
 
-  geocoderst(){
-    this.sendGetRequest();
-    this.geocoderstart = new MapboxGeocoder({
-    accessToken: environment.mapboxKey,
-    countries: 'de',
-    placeholder: 'Startpunkt eingeben',
-    mapboxgl: Mapboxgl
-    });
-    //this.geocoderstart.addTo('#geocoderstart');
-    document.getElementById('geocoderstart').appendChild(this.geocoderstart.onAdd(this.map));
-    this.disableButton = true;
-    }
+ createStartPoint(){
+    var geocoderStartJSON = this.geocoderstart.lastSelected;
+    let geocoderObjectStart = JSON.parse(geocoderStartJSON);
+    this.startPoint = geocoderObjectStart.place_name;
+    console.log(this.startPoint)
+ }
  
   createRoute() {
-    var geocoderJSON = this.geocoderziel.lastSelected;
-    let geocoderObject = JSON.parse(geocoderJSON); 
+    var geocoderStartJSON = this.geocoderstart.lastSelected;
+    this.geocoderObjectStart = JSON.parse(geocoderStartJSON);
+  
+    if(this.geocoderObjectStart == null){
+      this.latitude = this.latitude;
+      this.longitude = this.longitude;
+      this.startPoint = this.startPoint;
+      this.urlDirectionsStart = "https://api.mapbox.com/directions/v5/mapbox/driving-traffic/" +this.longitude + "," +this.latitude + ";" 
+     
+
+    }else{
+      this.latitude2 = this.geocoderstart.mapMarker._lngLat.lat;
+      this.longitude2 = this.geocoderstart.mapMarker._lngLat.lng;
+      this.startPoint = this.geocoderObjectStart.place_name;
+
+      this.urlDirectionsStart = "https://api.mapbox.com/directions/v5/mapbox/driving-traffic/" +this.longitude2 + "," +this.latitude2 + ";" 
+      
+    }
+
+     //  this.startPoint = geocoderObjectStart.place_name;
+ 
+    var geocoderZielJSON = this.geocoderziel.lastSelected;
+    let geocoderObject = JSON.parse(geocoderZielJSON); 
     this.endPoint = geocoderObject.place_name;
 
     this.latSearch = this.geocoderziel.mapMarker._lngLat.lat;
     this.lngSearch = this.geocoderziel.mapMarker._lngLat.lng;
 
-    if (this.startType == 'Eingabe'){
+    /* if (this.startType == 'Eingabe'){
       this.latitude = this.geocoderstart.mapMarker._lngLat.lat;
       this.longitude = this.geocoderstart.mapMarker._lngLat.lng;
       var geocoderJSON = this.geocoderstart.lastSelected;
       let geocoderObject = JSON.parse(geocoderJSON);
       this.startPoint = geocoderObject.place_name;
-      }
+      } */
      
-    console.log(this.geocoderziel)
-    var urlDirections = "https://api.mapbox.com/directions/v5/mapbox/driving-traffic/" +this.longitude + "," +this.latitude + ";" 
-    +this.lngSearch +"," +this.latSearch + "?overview=full&annotations=duration,distance&geometries=geojson" +"&access_token=" 
+    //console.log(this.geocoderziel)
+    var urlDirections = this.urlDirectionsStart +this.lngSearch +"," +this.latSearch + "?overview=full&annotations=duration,distance&geometries=geojson" +"&access_token=" 
     +environment.mapboxKey ;
     
+    console.log("Test:" +urlDirections);
     this.http.get(urlDirections).subscribe((results: any) => {  
     
      this.routeDuration = results.routes[0].duration/60;
@@ -245,6 +285,7 @@ export class JourneyPage {
          },
        })    
      });
+     
    }
 
    createJourney() {
@@ -260,9 +301,10 @@ export class JourneyPage {
       numberOfPersons: this.numberOfPersons,
       userID: this.currentUser.id
     }
+    console.log(this.journey)
+
     this.calculateTaxiRoutes();
    }
-
    async calculateTaxiRoutes(){
     for (let i=0; i<this.Taxis.length; i++) {
 
@@ -341,6 +383,7 @@ export class JourneyPage {
       message: 'Ihr Taxi wurde erfolgreich gebucht. Die Kosten betragen: ' +price +"€",
       buttons: ['OK']
     });
+    this.geocoderstart.clear();
     this.geocoderziel.clear();
     this.date = "";
     this.time = "";

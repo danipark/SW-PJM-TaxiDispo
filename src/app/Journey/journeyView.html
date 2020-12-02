@@ -25,29 +25,8 @@
 <ion-content>
     <ion-grid>
         <ion-row>
-            <ion-col class="start">
-                <ion-radio-group [(ngModel)]="startType">
-                    <ion-list-header>
-                        <ion-label>Startpunkt auswählen</ion-label>
-                    </ion-list-header>
-
-                    <ion-item>
-                        <ion-label>Aktueller Standort: {{startPoint}}</ion-label>
-                        <ion-radio slot="start" value="GPS"></ion-radio>
-                    </ion-item>
-
-                    <ion-item>
-                        <ion-label>Anderen Standort auswählen:</ion-label>
-                        <ion-radio slot="start" value="Eingabe" (click)="geocoderst()" [disabled]="disableButton"></ion-radio>
-                    </ion-item>
-                </ion-radio-group>
-
-            </ion-col>
-        </ion-row>
-
-        <ion-row>
             <ion-col offset=4 size=4>
-                <div id="geocoderstart" class="geocoderstart"></div>
+                <div id="geocoderstart" class="geocoderstart" (select)="createStartPoint()"></div>
             </ion-col>
         </ion-row>
         <ion-row>
