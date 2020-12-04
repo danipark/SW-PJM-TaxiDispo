@@ -18,18 +18,20 @@ export class KontoPage {
   Journeys: any = [];
   mergedObject: any = [];
   currentUser: any;
+  User: any;
+  points: any;
   constructor(
     private taxiRouteService: TaxirouteService,
     private journeyService: JourneyService,
     private authService: AuthService,
   ) {
+  
     this.currentUser = this.authService.user;
-   }
 
-
-  ionViewWillEnter() {
-
-    console.log(this.currentUser)
+    this.authService.getUser(this.currentUser.id).subscribe((res) =>{
+      this.User = res;
+      this.points = this.User.points
+    })
 
     this.taxiRouteService.getTaxiroutesById(this.currentUser.id).subscribe((res) => {
       this.TaxiRoutes = res;
@@ -43,6 +45,14 @@ export class KontoPage {
       console.log(this.Journeys.length);
       }
     )
+   }
+
+
+  ionViewWillEnter() {
+
+    console.log(this.currentUser)
+
+    
     
     setTimeout(() => {
       this.mergedObject = this.TaxiRoutes.map((item, i) => Object.assign({}, item, this.Journeys[i]))

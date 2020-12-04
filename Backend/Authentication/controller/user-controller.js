@@ -1,10 +1,11 @@
 var User = require('../models/user')
 var jwt = require('jsonwebtoken');
 var config = require('../../database/db');
+const user = require('../models/user');
 
 function createToken(user) {
-    return jwt.sign({ id: user.id, email: user.email, role: user.role}, config.jwtSecret, {
-        expiresIn: 200 // 86400 läuft in 24h ab
+    return jwt.sign({ id: user.id, email: user.email, role: user.role, points: user.points}, config.jwtSecret, {
+        expiresIn: 1200 // 86400 läuft in 24h ab
     });
 }
 
@@ -61,3 +62,30 @@ exports.loginUser = (req, res) => {
 });
 };
 
+//getUser
+exports.getUser = (req, res) => {
+    user.findById(req.params.id, (error, data) => {
+        if (error) {
+            return next(error)
+        } else {
+            res.json(data)
+        }
+    }) 
+
+}
+
+
+//updateUser
+exports.updateUser = (req,res) => {
+    user.findByIdAndUpdate(req.params.id, {
+        $set: req.body
+    }, (error, data) => {
+        if (error) {
+            return next(error);
+            console.log(error)
+        } else {
+            res.json(data)
+            console.log('User successfully updated!')
+        }
+    })
+};

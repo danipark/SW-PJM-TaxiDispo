@@ -18,8 +18,6 @@ import { TaxiService } from '../TaxiCompany/TaxiUnternehmen/Services/taxi.servic
 import { JourneyService } from './Services/journey.service';
 import { TaxirouteService } from '../TaxiCompany/TaxiManagement/Services/taxiroute.service';
 import { AuthService } from '../Login_new/services/auth.service';
-import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
-
 
 
 
@@ -44,7 +42,10 @@ export class JourneyPage {
   public map: Mapboxgl.Map;
   Taxis: any = [];
   dateFormat: any;
-  
+ 
+  //User
+  currentUser: any;
+  User: any;
 
   constructor(
     private mapboxService: MapboxServiceService,
@@ -59,6 +60,15 @@ export class JourneyPage {
 
       this.currentUser = this.authService.user;
 
+      //User-Objekt 
+      this.authService.getUser(this.currentUser.id).subscribe((res) =>{
+        this.User = res
+      })
+      //Liste der Taxis
+      this.taxiService.getTaxiList().subscribe((res) => {
+        this.Taxis = res;
+        console.log(this.Taxis)
+      });
     }
   
     addresses: string[] = [];
@@ -77,7 +87,8 @@ export class JourneyPage {
     date: String ="";
     time: String ="";
     numberOfPersons: number;
-  
+    stringForStartPoint: string="";
+
     //route
     route: any;
     price: number;
@@ -91,20 +102,12 @@ export class JourneyPage {
     completeDistance: number;
     entfernung = {};
 
-    //User
-    currentUser: any;
-
-    test: string="";
+   
 
     //Button nur 1x klicken
     disableButton;
     
   ngOnInit() {
-    
-    this.taxiService.getTaxiList().subscribe((res) => {
-      this.Taxis = res;
-    });
-
     var geoOptions: GeolocationOptions = {
       enableHighAccuracy: true,
       timeout: 5000,
@@ -132,7 +135,7 @@ export class JourneyPage {
     var url = "https://api.mapbox.com/geocoding/v5/mapbox.places/" +this.longitude+"," + this.latitude + ".json?language=de&access_token=" +environment.mapboxKey;
     this.http.get(url).subscribe((results: any) => {  
       this.startPoint = results.features[0].place_name;
-     this.test = this.startPoint;
+     this.stringForStartPoint = this.startPoint;
     });
   }
 
@@ -188,6 +191,7 @@ export class JourneyPage {
             } else {
           } 
         });
+
           //Geocoderziel
       this.geocoderziel = new MapboxGeocoder({
         accessToken: environment.mapboxKey,
@@ -363,6 +367,7 @@ export class JourneyPage {
       };    
     
     this.taxiRouteHinzufuegen(taxiRoute);
+    this.calculcatePoints(taxiRoute, this.currentUser);
     this.createPopup(price);
      console.log(res._id);
       
@@ -375,6 +380,34 @@ export class JourneyPage {
       console.log(res);
     })
   }
+
+  //Methode um Punkte des Users zu erhöhen
+  calculcatePoints(taxiRoute, currentUser){
+    console.log("Vor Kalkulation:" +this.User.points)
+    //completeDistance runden
+    var distance_rounded = Math.round(taxiRoute.completeDistance)
+
+    //Berechnung der Punkte
+    var points: number
+    points = distance_rounded * 1
+
+    //Umwandlung des Strings in Number
+    this.User.points = Number(this.User.points)
+
+    //Addition des alten Punktestands + neue Punkte
+    this.User.points = this.User.points + points
+    console.log("Nach Kalkulation:" +this.User.points)
+
+    //Update User in DB
+    this.authService.updateUser(currentUser.id, this.User).subscribe((res) => {
+      this.authService.getUser(this.currentUser.id).subscribe((res) =>{
+        this.User = res
+      })
+    })
+
+    console.log(this.User.points)
+  }
+
   async createPopup(Number) {
 
     var price = Math.round(Number * 100) / 100
@@ -383,7 +416,7 @@ export class JourneyPage {
       message: 'Ihr Taxi wurde erfolgreich gebucht. Die Kosten betragen: ' +price +"€",
       buttons: ['OK']
     });
-    this.geocoderstart.clear();
+   // this.geocoderstart.clear();
     this.geocoderziel.clear();
     this.date = "";
     this.time = "";

@@ -15,9 +15,12 @@ export class LoginPage implements OnInit {
   constructor(
     private formBuilder: FormBuilder, 
     private authService: AuthService,
-    private navCtrl: NavController) { }
+    private navCtrl: NavController) { 
+
+    }
  
   ngOnInit() {
+    this.authService.logout();
     this.credentialsForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]

@@ -31,6 +31,9 @@ var UserSchema = new mongoose.Schema({
     },
     companyName: {
         type: String
+    },
+    points: {
+        type: String
     }
 });
 

@@ -5,7 +5,8 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { Storage } from '@ionic/storage';
 import { environment } from '../../../environments/environment';
 import { tap, catchError } from 'rxjs/operators';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { User } from './user';
 const TOKEN_KEY = 'access_token';
 
 @Injectable({
@@ -63,7 +64,32 @@ export class AuthService {
         })
       );
   }
- 
+
+  getUser(id): Observable<User[]>{
+     console.log("getUser vor return")
+    return this.http.get<User[]>('http://localhost:3000/api/get-user/' + id)
+    .pipe(
+      tap(_ => console.log(`User fetched: ${id}`)),
+      catchError(this.handleError<User[]>(`Get User id=${id}`))
+    ); 
+  }
+
+  private handleError<T>(operation = 'operation', result?: T) {
+    return (error: any): Observable<T> => {
+      console.error(error);
+      console.log(`${operation} failed: ${error.message}`);
+      return of(result as T);
+    };
+  }
+
+  updateUser(id, user: User){
+    return this.http.put('http://localhost:3000/api/update-user/' + id, user)
+      .pipe(
+        tap(_ => console.log(`User updated: ${id}`)),
+        catchError(this.handleError<User[]>('Update Taxi'))
+      );
+  }
+  
   logout() {
     this.storage.remove(TOKEN_KEY).then(() => {
       this.authenticationState.next(false);

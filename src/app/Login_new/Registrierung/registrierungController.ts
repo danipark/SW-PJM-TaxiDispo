@@ -25,7 +25,8 @@ export class RegistrierungPage implements OnInit {
       password: ['', [Validators.required, Validators.minLength(6)]],
       firstName: ['', [Validators.required, Validators.minLength(2)]],
       lastName: ['', [Validators.required, Validators.minLength(2)]],
-      address: ['', [Validators.required, Validators.minLength(5)]]
+      address: ['', [Validators.required, Validators.minLength(5)]],
+      points: [0]
     });
 
     //Geocoder
@@ -70,7 +71,6 @@ export class RegistrierungPage implements OnInit {
     console.log(address);
     this.registerForm.addControl('address', new FormControl('', Validators.required));
     this.registerForm.controls['address'].setValue(address)
-    console.log(this.registerForm.value);
 
     this.authService.register(this.registerForm.value).subscribe(res => {
       // Call Login um automatisch User einzuloggen

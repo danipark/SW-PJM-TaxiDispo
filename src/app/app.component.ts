@@ -52,8 +52,8 @@ export class AppComponent {
       },
       {
         title : "Logout",
-        url   : "/logout",
-        icon  : "power"
+        url   : "/login",
+        icon  : "power",
       }
     ]
   }
