@@ -10,21 +10,32 @@
 </ion-header>
 
 <ion-content>
+     <!-- Code für die Punkte -->
     <ion-card>
-        <br>
-            <h4> Punkte: {{points}} </h4>
-        <br>
+        <ion-grid>
+            <ion-row>
+                <ion-col>
+                    <h4> Punkte: </h4>
+                </ion-col>
+                <ion-col>
+                    <ion-button (click)="createPopup()" color="warning">
+                        <h4> {{points}} </h4>
+                    </ion-button>                       
+                </ion-col>
+            </ion-row>
+        </ion-grid>
     </ion-card>
 
     <!-- Button für PDF generation
     <button (click)="generatePdf()">Open PDF</button> -->
-
+    <!-- Code für die Taxifahrten-Tabelle -->
     <ion-scroll scrollX="true" scrollY="true" zoom="false" no-padding>
         <ion-card>
             <h4> Taxifahrten: </h4>
             <ion-grid>
                 <!------------------- HEADER ----------------------->
                 <ion-row class="test">
+                    
                     <ion-col>
                         <h5>Datum</h5>
                     </ion-col>
@@ -51,7 +62,7 @@
                     <ion-col>{{item.completeDistance}} km</ion-col>
                     <ion-col>{{item.price}} €</ion-col>
                     <ion-col>
-                        <ion-button name="print" color="warning" (click)="generatePdf()">
+                        <ion-button name="print" color="warning" (click)="generatePdf(item)">
                             <ion-icon name="print"></ion-icon>
                         </ion-button>
                     </ion-col>

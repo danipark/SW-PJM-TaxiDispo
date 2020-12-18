@@ -4,6 +4,7 @@ import { JourneyService } from '../Journey/Services/journey.service';
 import { AuthService } from '../Login_new/services/auth.service';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { AlertController } from '@ionic/angular';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -20,10 +21,14 @@ export class KontoPage {
   currentUser: any;
   User: any;
   points: any;
+  pdfpreis: any= [];
+  t:any;
+  selectedRadioGroup:any;
   constructor(
     private taxiRouteService: TaxirouteService,
     private journeyService: JourneyService,
     private authService: AuthService,
+    public alertController: AlertController
   ) {
   
     this.currentUser = this.authService.user;
@@ -57,17 +62,38 @@ export class KontoPage {
     setTimeout(() => {
       this.mergedObject = this.TaxiRoutes.map((item, i) => Object.assign({}, item, this.Journeys[i]))
       for (var i = 0; i < this.mergedObject.length; i++) {
+        this.t=i;
         this.mergedObject[i].price = Math.round(this.mergedObject[i].price *100)/100;
         this.mergedObject[i].completeDistance = Math.round(this.mergedObject[i].completeDistance * 100)/100; 
       }
       console.log(this.mergedObject)
     }, 1000)
+    
+
   }
-
-
-  generatePdf(){
-    const documentDefinition = {content: 'Hier könnte ihre Taxifahrt stehen' }
-        pdfMake.createPdf(documentDefinition).open();
+  generatePdf(item){
+    var documentDefinition:any;
+    
+    documentDefinition = {
+      content:'Name '+ this.User.firstName + ' ' + this.User.lastName +' Adresse: ' + this.User.address
+        + ' Preis ' + item.price+'€'}
+    
+    pdfMake.createPdf(documentDefinition).open();
+  }
+  async createPopup(){
+    const alert = await this.alertController.create({
+      header: 'Gutschein',
+      message: 'Für 100 Punkte können Sie sich einen Gutschein-Code generieren. Dieser ermöglicht Ihnen 10% Rabatt bei der nächsten Taxifahrt!',    
+      buttons: [
+        { text: 'Cancel', role: 'cancel', cssClass: 'secondary', handler: () => {          }
+        }, {
+          text: 'Gutschein-Code generieren',
+           handler: async () => {
+            console.log('ok')
+          }
+        }
+      ]
+    });
+    await alert.present();
    }
-  
 }
