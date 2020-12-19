@@ -20,17 +20,17 @@
     z-index: 999;
 }
 
-.startpoint {
+.geocoderstart {
     position: absolute;
     z-index: 1;
-    width: 80%;
+    width: 50%;
     left: 50%;
     margin-left: -25%;
     top: 30px;
 
 }
 
-.geocoder {
+.geocoderziel {
     position: absolute;
     z-index: 2;
     width: 50%;
