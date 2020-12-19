@@ -19,6 +19,8 @@ import { JourneyService } from './Services/journey.service';
 import { TaxirouteService } from '../TaxiCompany/TaxiManagement/Services/taxiroute.service';
 import { AuthService } from '../Login_new/services/auth.service';
 
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+
 
 
 @Component({
@@ -29,7 +31,7 @@ import { AuthService } from '../Login_new/services/auth.service';
 
 
 
-export class JourneyPage {
+export class JourneyPage implements OnInit {
 
   selectedKey: any;
   smallestValue: any;
@@ -47,8 +49,10 @@ export class JourneyPage {
   currentUser: any;
   User: any;
 
-  selectedOption:any;
-  visability: boolean = true; 
+  selectedOption: any;
+  visability: boolean = true;
+
+  journeyForm: FormGroup;
 
   constructor(
     private mapboxService: MapboxServiceService,
@@ -59,6 +63,7 @@ export class JourneyPage {
     private taxiRouteService: TaxirouteService,
     private alertController: AlertController,
     private authService: AuthService,
+    private formBuilder: FormBuilder,
   ) {
 
     this.currentUser = this.authService.user;
@@ -97,17 +102,19 @@ export class JourneyPage {
   price: number;
   routeDistance: number;
   routeDuration: number;
-
+  taxiRoute: any;
+  distance_rounded: number;
+  points: number;
 
   //Payment
   paymentType: string = "";
   completeDistance: number;
   entfernung = {};
 
-   //PayPal
-   paymentAmount;
-   currency: string = 'EUR';
-   currencyIcon: string = '€';
+  //PayPal
+  paymentAmount;
+  currency: string = 'EUR';
+  currencyIcon: string = '€';
 
 
 
@@ -115,6 +122,9 @@ export class JourneyPage {
   disableButton;
 
   ngOnInit() {
+
+    this.buildJourneyForm();
+
     var geoOptions: GeolocationOptions = {
       enableHighAccuracy: true,
       timeout: 5000,
@@ -131,11 +141,15 @@ export class JourneyPage {
     }).catch((error) => {
       alert('Error getting location' + JSON.stringify(error));
     })
+  }
 
-
-
-    //https://api.mapbox.com/geocoding/v5/mapbox.places/-73.989,40.733.json?access_token=
-
+  buildJourneyForm() {
+    this.journeyForm = this.formBuilder.group({
+      dateForm: ['', [Validators.required, Validators.minLength(1)]],
+      timeForm: ['', [Validators.required, Validators.minLength(1)]],
+      numberOfPersonsForm: ['', [Validators.required, Validators.minLength(1)]],
+      paymentTypeForm: ['', [Validators.required, Validators.minLength(1)]],
+    });
   }
 
   public sendGetRequest() {
@@ -146,54 +160,53 @@ export class JourneyPage {
     });
   }
 
-  selectOptionChange(event){
+  selectOnlinePayment(event) {
     this.selectedOption = event.detail.value;
-    if (this.selectedOption == "paypal"){
-      this.createJourney();
-      this.visability = false ;
-        let _this = this;
-        setTimeout(() => {
-          window['paypal'].Buttons({
-            // Wird aufgerufen wenn PayPal Button ausgewählt wird
-             style: {
-              layout: "horizontal",
-              color: "gold",
-              shape: "rect",
-              label: "paypal"
-            },  
-            createOrder: function (data, actions) {
-              return actions.order.create({
-                purchase_units: [{
-                  amount: {
-                    value: _this.paymentAmount 
-                                    }
-                }]
-              });
-            },
-            // Erfolgreiche Abwicklung
-            onApprove: function (data, actions) {
-              return actions.order.capture()
-                .then(function (details) {
-                  _this.clearField();
-                  alert('Bezahlung von '+ _this.paymentAmount + ' € erfolgreich durchgeführt von: ' + details.payer.name.given_name + '!');
-                 // this.test();
-                })
-                .catch(err => {
-                  console.log(err);
-                })
-              }
-          }).render('#paypal-button-container');
-        }, 500)
-      
-    
+    if (this.selectedOption == "paypal") {
+      this.calculateTaxiRoutes();
+      this.paymentAmount = this.price;
+      this.visability = false;
+      let _this = this;
+      setTimeout(() => {
+        window['paypal'].Buttons({
+          // Wird aufgerufen wenn PayPal Button ausgewählt wird
+          style: {
+            layout: "horizontal",
+            color: "gold",
+            shape: "rect",
+            label: "paypal"
+          },
+          createOrder: function (data, actions) {
+            return actions.order.create({
+              purchase_units: [{
+                amount: {
+                  value: _this.paymentAmount
+                }
+              }]
+            });
+          },
+          // Erfolgreiche Abwicklung
+          onApprove: function (data, actions) {
+            return actions.order.capture()
+              .then(function (details) {
+                _this.createJourney();
+                // _this.clearField();
+                //  alert('Bezahlung von ' + _this.paymentAmount + ' € erfolgreich durchgeführt von: ' + details.payer.name.given_name + '!');
+
+              })
+              .catch(err => {
+                console.log(err);
+              })
+          }
+        }).render('#paypal-button-container');
+      }, 500)
+
+
     } else {
-      this.visability = true ;
+      this.visability = true;
 
     }
   }
-
-
-
 
   ngAfterViewInit() {
 
@@ -297,8 +310,6 @@ export class JourneyPage {
 
     }
 
-    //  this.startPoint = geocoderObjectStart.place_name;
-
     var geocoderZielJSON = this.geocoderziel.lastSelected;
     let geocoderObject = JSON.parse(geocoderZielJSON);
     this.endPoint = geocoderObject.place_name;
@@ -306,21 +317,12 @@ export class JourneyPage {
     this.latSearch = this.geocoderziel.mapMarker._lngLat.lat;
     this.lngSearch = this.geocoderziel.mapMarker._lngLat.lng;
 
-    /* if (this.startType == 'Eingabe'){
-      this.latitude = this.geocoderstart.mapMarker._lngLat.lat;
-      this.longitude = this.geocoderstart.mapMarker._lngLat.lng;
-      var geocoderJSON = this.geocoderstart.lastSelected;
-      let geocoderObject = JSON.parse(geocoderJSON);
-      this.startPoint = geocoderObject.place_name;
-      } */
 
-    //console.log(this.geocoderziel)
     var urlDirections = this.urlDirectionsStart + this.lngSearch + "," + this.latSearch + "?overview=full&annotations=duration,distance&geometries=geojson" + "&access_token="
       + environment.mapboxKey;
 
     console.log("Test:" + urlDirections);
     this.http.get(urlDirections).subscribe((results: any) => {
-
       this.routeDuration = results.routes[0].duration / 60;
       this.routeDistance = results.routes[0].distance / 1000;
       this.map.addLayer({
@@ -345,6 +347,7 @@ export class JourneyPage {
         },
       })
     });
+    this.calculateTaxiRoutes();
 
   }
 
@@ -352,7 +355,6 @@ export class JourneyPage {
     console.log(this.date);
     this.dateFormat = this.date.split('T')[0];
     var timeFormat = this.time.split('T')[1];
-
     this.journey = {
       startPoint: this.startPoint,
       endPoint: this.endPoint,
@@ -361,31 +363,24 @@ export class JourneyPage {
       numberOfPersons: this.numberOfPersons,
       userID: this.currentUser.id
     }
-    console.log(this.journey)
-
-    this.calculateTaxiRoutes();
+    this.saveJourney(this.journey);
   }
+
   async calculateTaxiRoutes() {
     for (let i = 0; i < this.Taxis.length; i++) {
-
       var taxiLat = this.Taxis[i].taxiLatitude;
       var taxiLong = this.Taxis[i].taxiLongitude;
-
       var urlDirections = "https://api.mapbox.com/directions/v5/mapbox/driving-traffic/" + this.longitude + "," + this.latitude + ";"
         + taxiLong + "," + taxiLat + "?overview=full&annotations=duration,distance&geometries=geojson" + "&access_token="
         + environment.mapboxKey;
-
       this.http.get(urlDirections).subscribe(async (results: any) => {
 
         this.entfernung[this.Taxis[i]._id] = results.routes[0].distance / 1000;
       });
     }
-
     setTimeout(() => {
-
       this.calculateOptimalTaxi(this.entfernung);
       this.calculateCompleteRoute();
-
     }, 2000)
   }
 
@@ -401,96 +396,97 @@ export class JourneyPage {
   }
 
   calculateCompleteRoute() {
-
-    this.journeyHinzufuegen(this.journey);
-
-
+    this.completeDistance = this.smallestValue + this.routeDistance;
+    this.price = this.completeDistance * 1.15
+    this.roundNumbers();
   }
 
-  journeyHinzufuegen(journey) {
+  roundNumbers() {
+    this.price = Math.round((this.price + Number.EPSILON) * 100) / 100
+    this.completeDistance = Math.round((this.completeDistance + Number.EPSILON) * 100) / 100
+  }
+
+  saveJourney(journey) {
     this.journeyService.addJourney(this.journey).subscribe((res) => {
       var journeyID = res._id;
-      var completeDistance = this.smallestValue + this.routeDistance;
-      var price = completeDistance * 1.15
-      var taxiRoute = {
-        taxiID: this.selectedKey,
-        journeyID: journeyID,
-        taxiDistance: this.smallestValue,
-        completeDistance: completeDistance,
-        price: price,
-        date: this.dateFormat,
-        userID: this.currentUser.id
-      };
-
-      this.taxiRouteHinzufuegen(taxiRoute);
-      this.calculcatePoints(taxiRoute, this.currentUser);
-      this.createPopup(price);
+      this.createTaxiRoute(journeyID);
+      this.saveTaxiRoute(this.taxiRoute);
+      this.savePoints(this.taxiRoute, this.currentUser);
+      this.createPopup();
       console.log(res._id);
-
     });
-
   }
 
-  taxiRouteHinzufuegen(taxiRoute) {
+  createTaxiRoute(journeyID) {
+    this.taxiRoute = {
+      taxiID: this.selectedKey,
+      journeyID: journeyID,
+      taxiDistance: this.smallestValue,
+      completeDistance: this.completeDistance,
+      price: this.price,
+      date: this.dateFormat,
+      userID: this.currentUser.id
+    };
+  }
+  saveTaxiRoute(taxiRoute) {
     this.taxiRouteService.addTaxiroute(taxiRoute).subscribe((res) => {
       console.log(res);
     })
   }
 
-  //Methode um Punkte des Users zu erhöhen
-  calculcatePoints(taxiRoute, currentUser) {
+  savePoints(taxiRoute, currentUser) {
     console.log("Vor Kalkulation:" + this.User.points)
-    //completeDistance runden
-    var distance_rounded = Math.round(taxiRoute.completeDistance)
-
-    //Berechnung der Punkte
-    var points: number
-    points = distance_rounded * 1
-
-    //Umwandlung des Strings in Number
-    this.User.points = Number(this.User.points)
-
-    //Addition des alten Punktestands + neue Punkte
-    this.User.points = this.User.points + points
+    this.roundDistance(taxiRoute)
+    this.refactorStringToNumber();
+    this.calculatePoints();
+    this.updateUser(currentUser);
     console.log("Nach Kalkulation:" + this.User.points)
+  }
 
-    //Update User in DB
+  roundDistance(taxiRoute) {
+    this.distance_rounded = Math.round(taxiRoute.completeDistance)
+  }
+
+  calculatePoints() {
+    this.points = this.distance_rounded * 1
+    this.User.points = this.User.points + this.points
+  }
+
+  refactorStringToNumber() {
+    this.User.points = Number(this.User.points)
+  }
+
+  updateUser(currentUser) {
     this.authService.updateUser(currentUser.id, this.User).subscribe((res) => {
       this.authService.getUser(this.currentUser.id).subscribe((res) => {
         this.User = res
       })
     })
-
-    console.log(this.User.points)
   }
 
-  async createPopup(Number) {
 
-    var price = Math.round(Number * 100) / 100
-    this.paymentAmount=price;
-    if (this.paymentType == 'bar'){
-      const alert = await this.alertController.create({
-        header: 'Vielen Dank!',
-        message: 'Ihr Taxi wurde erfolgreich gebucht. Die Kosten betragen: ' +price +"€",
-        buttons: ['OK']
-      });
+  async createPopup() {
+    const alert = await this.alertController.create({
+      header: 'Vielen Dank!',
+      message: 'Ihr Taxi wurde erfolgreich gebucht. Die Kosten betragen: ' + this.price + "€",
+      buttons: ['OK']
+    });
     this.geocoderstart.clear();
     this.date = "";
     this.time = "";
     this.numberOfPersons = 0;
-    this.paymentType = ""; 
+    this.paymentType = "";
+    this.price = 0;
+
     await alert.present();
-    } 
-     
   }
-
-  async clearField(){
-   
+  async clearField() {
     this.geocoderstart.clear();
     this.date = "";
     this.time = "";
     this.numberOfPersons = 0;
-    this.paymentType = ""; 
+    this.paymentType = "";
+    this.price = 0;
   }
 
 

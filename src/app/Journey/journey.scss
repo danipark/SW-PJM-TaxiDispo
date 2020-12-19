@@ -22,7 +22,7 @@
 
 .geocoderstart {
     position: absolute;
-    z-index: 1;
+    z-index: 3;
     width: 50%;
     left: 50%;
     margin-left: -25%;
@@ -66,7 +66,7 @@
     top: 170px;
 }
 
-.Payment {
+.Voucher {
     position: absolute;
     z-index: 1;
     width: 50%;
@@ -74,13 +74,31 @@
     margin-left: -25%;
     top: 200px;
 }
+
+.Price {
+    position: absolute;
+    z-index: 1;
+    width: 50%;
+    left: 53%;
+    margin-left: -25%;
+    top: 262px;
+}
+
+.Payment {
+    position: absolute;
+    z-index: 1;
+    width: 50%;
+    left: 50%;
+    margin-left: -25%;
+    top: 280px;
+}
 .Buchen {
     position: absolute;
     z-index: 1;
     width: 50%;
     left: 50%;
     margin-left: -25%;
-    top: 230px;
+    top: 310px;
 }
 
 .PayPal {
@@ -89,6 +107,6 @@
     width: 16%;
     left: 67%;
     margin-left: -25%;
-    top: 300px;
+    top: 400px;
 
-} 
+}

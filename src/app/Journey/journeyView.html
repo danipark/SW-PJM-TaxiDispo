@@ -23,59 +23,78 @@
 </ion-content>
 
 <ion-content>
-    <ion-grid>
-        <ion-row>
-            <ion-col offset=4 size=4>
-                <div id="geocoderstart" class="geocoderstart" (select)="createStartPoint()"></div>
-            </ion-col>
-        </ion-row>
-        <ion-row>
-            <ion-col offset=4 size=4>
-                <div id="geocoderziel" class="geocoderziel" (select)="createRoute()"></div>
-            </ion-col>
-        </ion-row>
-        <ion-row>
-            <ion-col offset=4 size=4>
-                <ion-datetime class="date" [(ngModel)]="date" min="2020-01-01" max="2020-12-31"
-                    dayShortNames="Montag, Dienstag, Mittwoch, Donnerstag, Freitag, Samstag, Sonntag"
-                    monthShortNames="Januar, Februar, März, April, Mai, Juni, Juli, August, September, Oktober, November, Dezember"
-                    cancelText="Abbrechen" doneText="Fertig" placeholder="Datum eingeben"></ion-datetime>
-            </ion-col>
-        </ion-row>
-        <ion-row>
-            <ion-col offset=4 size=4>
-                <ion-datetime class="time" [(ngModel)]="time" displayFormat="HH:mm" cancelText="Abbrechen"
-                    doneText="Fertig" placeholder="Uhrzeit eingeben"></ion-datetime>
-            </ion-col>
-        </ion-row>
-        <ion-row>
-            <ion-col offset=4 size=4>
-                <ion-select class="NumberOfPerson" [(ngModel)]="numberOfPersons" placeholder="Personenanzahl">
-                    <ion-select-option value="1">1</ion-select-option>
-                    <ion-select-option value="2">2</ion-select-option>
-                    <ion-select-option value="3">3</ion-select-option>
-                    <ion-select-option value="4">4</ion-select-option>
-                    <ion-select-option value="5">5</ion-select-option>
-                    <ion-select-option value="6">6</ion-select-option>
-                    <ion-select-option value="7">7</ion-select-option>
-                </ion-select>
-            </ion-col>
-        </ion-row>
-        <ion-row>
-            <ion-col offset=4 size=4>
-                <ion-select (ionChange)="selectOptionChange($event)" class="Payment" [(ngModel)]="paymentType"
-                    placeholder="Bezahlung">
-                    <ion-select-option value="bar">Bar</ion-select-option>
-                    <ion-select-option value="paypal">Onlinezahlung</ion-select-option>
-                </ion-select>
-            </ion-col>
-        </ion-row>
-        <div *ngIf="selectedOption === 'paypal'" class=PayPal id="paypal-button-container"></div>
-        <ion-row>
-            <ion-col offset=4 size=4>
-                <ion-button class="Buchen" *ngIf="visability" (click)="createJourney()" color="warning">Taxifahrt buchen
-                </ion-button>
-            </ion-col>
-        </ion-row>
-    </ion-grid>
+    <form [formGroup]="journeyForm">
+        <ion-grid>
+            <ion-row>
+                <ion-col offset=4 size=4>
+                    <div id="geocoderstart" class="geocoderstart" (select)="createStartPoint()"></div>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col offset=4 size=4>
+                    <div id="geocoderziel" class="geocoderziel" (select)="createRoute()"></div>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col offset=4 size=4>
+                    <ion-datetime class="date" [(ngModel)]="date" min="2020-01-01" max="2020-12-31"
+                        dayShortNames="Montag, Dienstag, Mittwoch, Donnerstag, Freitag, Samstag, Sonntag"
+                        monthShortNames="Januar, Februar, März, April, Mai, Juni, Juli, August, September, Oktober, November, Dezember"
+                        cancelText="Abbrechen" doneText="Fertig" placeholder="Datum eingeben" formControlName="dateForm"></ion-datetime>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col offset=4 size=4>
+                    <ion-datetime class="time" [(ngModel)]="time" displayFormat="HH:mm" cancelText="Abbrechen"
+                        doneText="Fertig" placeholder="Uhrzeit eingeben" formControlName="timeForm"></ion-datetime>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col offset=4 size=4>
+                    <ion-select class="NumberOfPerson" [(ngModel)]="numberOfPersons" placeholder="Personenanzahl" formControlName="numberOfPersonsForm">
+                        <ion-select-option value="1">1</ion-select-option>
+                        <ion-select-option value="2">2</ion-select-option>
+                        <ion-select-option value="3">3</ion-select-option>
+                        <ion-select-option value="4">4</ion-select-option>
+                        <ion-select-option value="5">5</ion-select-option>
+                        <ion-select-option value="6">6</ion-select-option>
+                        <ion-select-option value="7">7</ion-select-option>
+                    </ion-select>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col offset=4 size=4>
+                    <ion-item class="Voucher">
+                        <ion-label position="floating">Gutscheincode</ion-label>
+                        <ion-input></ion-input>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col offset=4 size=4>
+                    <ion-label class="Price">
+                        Preis: {{price}} €
+                    </ion-label>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col offset=4 size=4>
+                    <ion-select (ionChange)="selectOnlinePayment($event)" class="Payment" [(ngModel)]="paymentType"
+                        placeholder="Bezahlung" formControlName="paymentTypeForm">
+                        <ion-select-option value="bar">Bar</ion-select-option>
+                        <ion-select-option value="paypal">Onlinezahlung</ion-select-option>
+                    </ion-select>
+                </ion-col>
+            </ion-row>
+            <div *ngIf="selectedOption === 'paypal'" class=PayPal id="paypal-button-container"></div>
+
+            <ion-row>
+                <ion-col offset=4 size=4>
+                    <ion-button type="submit" class="Buchen" *ngIf="visability" (click)="createJourney()" color="warning" [disabled]="!journeyForm.valid">Taxifahrt
+                        buchen
+                    </ion-button>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </form>
 </ion-content>

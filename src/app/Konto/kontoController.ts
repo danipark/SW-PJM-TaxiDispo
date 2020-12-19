@@ -5,6 +5,8 @@ import { AuthService } from '../Login_new/services/auth.service';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { AlertController } from '@ionic/angular';
+import { KontoService } from './Services/konto.service';
+import { JourneyPage } from '../Journey/journeyController'
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -23,13 +25,18 @@ export class KontoPage {
   points: any;
   pdfpreis: any = [];
   t: any;
+
+  voucher: any;
+  voucherID: number;
+
   selectedRadioGroup: any;
   constructor(
     private taxiRouteService: TaxirouteService,
     private journeyService: JourneyService,
     private authService: AuthService,
-    public alertController: AlertController
-  ) {}
+    public alertController: AlertController,
+    private kontoService: KontoService,
+  ) { }
 
 
   ionViewWillEnter() {
@@ -84,17 +91,29 @@ export class KontoPage {
     pdfMake.createPdf(documentDefinition).open();
   }
 
-  async createPopup() {
+  async createPopupForVoucher() {
     const alert = await this.alertController.create({
       header: 'Gutschein',
-      message: 'Für 100 Punkte können Sie sich einen Gutschein-Code generieren. Dieser ermöglicht Ihnen 10% Rabatt bei der nächsten Taxifahrt!',
+      message: 'Für 1000 Punkte können Sie sich einen Gutschein-Code generieren. Dieser ermöglicht Ihnen 10% Rabatt bei der nächsten Taxifahrt!',
       buttons: [
         {
           text: 'Cancel', role: 'cancel', cssClass: 'secondary', handler: () => { }
         }, {
           text: 'Gutschein-Code generieren',
           handler: async () => {
-            console.log('ok')
+            this.voucher = {
+              active: true,
+              userID: this.currentUser.id
+            }
+
+            this.kontoService.addVoucher(this.voucher).subscribe((res) => {
+              this.voucherID = res._id;
+              this.User.points = this.User.points - 1000;
+              this.updateUser(this.currentUser);
+              this.points = this.User.points;
+              this.alertWithVoucherCode();
+              console.log("Gutschein-Code: " +this.voucherID)
+            });
           }
         }
       ]
@@ -102,6 +121,23 @@ export class KontoPage {
     await alert.present();
   }
 
-  
-
+  async alertWithVoucherCode() {
+    const alert = await this.alertController.create({
+      header: 'Ihr Gutschein-Code',
+      message: 'Bitte speichern Sie den Gutschein-Code ab. Dieser ist nur jetzt sichtbar! Gutschein-Code: ' + this.voucherID,
+      buttons: [
+        {
+          text: 'Ok', role: 'cancel', cssClass: 'secondary', handler: () => { }
+        }
+      ]
+    })
+    await alert.present();
+  }
+  updateUser(currentUser) {
+    this.authService.updateUser(currentUser.id, this.User).subscribe((res) => {
+      this.authService.getUser(this.currentUser.id).subscribe((res) => {
+        this.User = res
+      })
+    })
+  }
 }

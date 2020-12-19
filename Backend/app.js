@@ -19,9 +19,9 @@ const authenticationRoute = require('./Routes/authentication.route')
 const taxiRoute = require('./Routes/taxi.route')
 const journeyRoute = require('./Routes/journey.route')
 const taxirouteRoute = require('./Routes/taxiroute.route')
-
+const voucherRoute = require('./Routes/voucher.route')
 // RESTful API root
-app.use('/api',authenticationRoute, taxiRoute, journeyRoute, taxirouteRoute)
+app.use('/api',authenticationRoute, taxiRoute, journeyRoute, taxirouteRoute, voucherRoute)
 
 // Connecting mongoDB
 mongoose.Promise = global.Promise;

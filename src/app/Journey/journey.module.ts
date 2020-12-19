@@ -1,9 +1,8 @@
 import { IonicModule } from '@ionic/angular';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { JourneyPage } from './journeyController';
-
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { JourneyPageRoutingModule } from './journey-routing.module';
 
@@ -12,7 +11,8 @@ import { JourneyPageRoutingModule } from './journey-routing.module';
     IonicModule,
     CommonModule,
     FormsModule,
-    JourneyPageRoutingModule
+    JourneyPageRoutingModule,
+    ReactiveFormsModule,
   ],
   declarations: [JourneyPage]
 })
