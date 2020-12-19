@@ -14,86 +14,94 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 })
 export class KontoPage {
 
-   
+
   TaxiRoutes: any = [];
   Journeys: any = [];
   mergedObject: any = [];
   currentUser: any;
   User: any;
   points: any;
-  pdfpreis: any= [];
-  t:any;
-  selectedRadioGroup:any;
+  pdfpreis: any = [];
+  t: any;
+  selectedRadioGroup: any;
   constructor(
     private taxiRouteService: TaxirouteService,
     private journeyService: JourneyService,
     private authService: AuthService,
     public alertController: AlertController
-  ) {
-  
-    this.currentUser = this.authService.user;
+  ) {}
 
-    this.authService.getUser(this.currentUser.id).subscribe((res) =>{
+
+  ionViewWillEnter() {
+    this.currentUser = this.authService.user;
+    this.getUser();
+    this.getTaxiRoutes();
+    this.getJourneys();
+    setTimeout(() => {
+      this.mergeTaxiRoutesAndJourneys();
+    }, 1000)
+  }
+  getUser() {
+    this.authService.getUser(this.currentUser.id).subscribe((res) => {
       this.User = res;
       this.points = this.User.points
     })
+  }
 
+  getTaxiRoutes() {
     this.taxiRouteService.getTaxiroutesById(this.currentUser.id).subscribe((res) => {
       this.TaxiRoutes = res;
       console.log(this.TaxiRoutes);
-      }
+    }
     )
-    
+  }
+
+  getJourneys() {
     this.journeyService.getJourneysById(this.currentUser.id).subscribe((res) => {
       this.Journeys = res;
       console.log(this.Journeys);
       console.log(this.Journeys.length);
-      }
+    }
     )
-   }
-
-
-  ionViewWillEnter() {
-
-    console.log(this.currentUser)
-
-    
-    
-    setTimeout(() => {
-      this.mergedObject = this.TaxiRoutes.map((item, i) => Object.assign({}, item, this.Journeys[i]))
-      for (var i = 0; i < this.mergedObject.length; i++) {
-        this.t=i;
-        this.mergedObject[i].price = Math.round(this.mergedObject[i].price *100)/100;
-        this.mergedObject[i].completeDistance = Math.round(this.mergedObject[i].completeDistance * 100)/100; 
-      }
-      console.log(this.mergedObject)
-    }, 1000)
-    
-
   }
-  generatePdf(item){
-    var documentDefinition:any;
-    
+
+  mergeTaxiRoutesAndJourneys() {
+    this.mergedObject = this.TaxiRoutes.map((item, i) => Object.assign({}, item, this.Journeys[i]))
+    for (var i = 0; i < this.mergedObject.length; i++) {
+      this.t = i;
+      this.mergedObject[i].price = Math.round(this.mergedObject[i].price * 100) / 100;
+      this.mergedObject[i].completeDistance = Math.round(this.mergedObject[i].completeDistance * 100) / 100;
+    }
+  }
+
+  generatePdf(item) {
+    var documentDefinition: any;
     documentDefinition = {
-      content:'Name '+ this.User.firstName + ' ' + this.User.lastName +' Adresse: ' + this.User.address
-        + ' Preis ' + item.price+'€'}
-    
+      content: 'Name ' + this.User.firstName + ' ' + this.User.lastName + ' Adresse: ' + this.User.address
+        + ' Preis ' + item.price + '€'
+    }
+
     pdfMake.createPdf(documentDefinition).open();
   }
-  async createPopup(){
+
+  async createPopup() {
     const alert = await this.alertController.create({
       header: 'Gutschein',
-      message: 'Für 100 Punkte können Sie sich einen Gutschein-Code generieren. Dieser ermöglicht Ihnen 10% Rabatt bei der nächsten Taxifahrt!',    
+      message: 'Für 100 Punkte können Sie sich einen Gutschein-Code generieren. Dieser ermöglicht Ihnen 10% Rabatt bei der nächsten Taxifahrt!',
       buttons: [
-        { text: 'Cancel', role: 'cancel', cssClass: 'secondary', handler: () => {          }
+        {
+          text: 'Cancel', role: 'cancel', cssClass: 'secondary', handler: () => { }
         }, {
           text: 'Gutschein-Code generieren',
-           handler: async () => {
+          handler: async () => {
             console.log('ok')
           }
         }
       ]
     });
     await alert.present();
-   }
+  }
+
+  
+
 }
