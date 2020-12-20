@@ -18,8 +18,8 @@ import { TaxiService } from '../TaxiCompany/TaxiUnternehmen/Services/taxi.servic
 import { JourneyService } from './Services/journey.service';
 import { TaxirouteService } from '../TaxiCompany/TaxiManagement/Services/taxiroute.service';
 import { AuthService } from '../Login_new/services/auth.service';
-
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { KontoService } from '../Konto/Services/konto.service'
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 
 
 
@@ -61,6 +61,7 @@ export class JourneyPage implements OnInit {
     private taxiService: TaxiService,
     private journeyService: JourneyService,
     private taxiRouteService: TaxirouteService,
+    private kontoService: KontoService,
     private alertController: AlertController,
     private authService: AuthService,
     private formBuilder: FormBuilder,
@@ -105,6 +106,8 @@ export class JourneyPage implements OnInit {
   taxiRoute: any;
   distance_rounded: number;
   points: number;
+  voucherCode: String;
+  voucher: any;
 
   //Payment
   paymentType: string = "";
@@ -142,6 +145,7 @@ export class JourneyPage implements OnInit {
       alert('Error getting location' + JSON.stringify(error));
     })
   }
+
 
   buildJourneyForm() {
     this.journeyForm = this.formBuilder.group({
@@ -381,6 +385,8 @@ export class JourneyPage implements OnInit {
     setTimeout(() => {
       this.calculateOptimalTaxi(this.entfernung);
       this.calculateCompleteRoute();
+      this.calculatePrice();
+      this.roundNumbers();
     }, 2000)
   }
 
@@ -397,8 +403,45 @@ export class JourneyPage implements OnInit {
 
   calculateCompleteRoute() {
     this.completeDistance = this.smallestValue + this.routeDistance;
+  }
+
+  calculatePrice() {
     this.price = this.completeDistance * 1.15
-    this.roundNumbers();
+  }
+
+  calculateDiscountedPrice() {
+    if (this.voucherCode != '') {
+      this.kontoService.getVoucherById(this.voucherCode).subscribe((data) => {
+        this.voucher = data;
+        if (this.voucherCode == this.voucher._id && this.voucher.active == true) {
+          this.price = this.price * 0.9
+          this.price = Math.round((this.price + Number.EPSILON) * 100) / 100
+          this.voucher.active = false;
+          this.kontoService.updateVoucher(this.voucherCode, this.voucher).subscribe((res) => {
+          })
+        } else {
+          this.createPopUpForInvalidVoucher();
+          this.clearVoucherField();
+        }
+      })
+    } else {
+    }
+  }
+
+  async createPopUpForInvalidVoucher() {
+    const alert = await this.alertController.create({
+      header: 'Gutschein',
+      message: 'Leider ist der eingegebene Gutscheincode ungültig!',
+      buttons: [
+        {
+          text: 'Cancel', role: 'cancel', cssClass: 'secondary', handler: () => { }
+        }]
+    });
+    await alert.present();
+  }
+
+  clearVoucherField() {
+    this.voucherCode = ''
   }
 
   roundNumbers() {

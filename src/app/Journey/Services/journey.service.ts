@@ -37,8 +37,8 @@ export class JourneyService {
         tap(journeys => console.log('Journeys fetched!')),
         catchError(this.handleError<Journey[]>('Get Journeys', []))
       );
-
   }
+  
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       console.error(error);

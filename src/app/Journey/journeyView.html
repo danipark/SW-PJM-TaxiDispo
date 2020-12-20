@@ -40,7 +40,8 @@
                     <ion-datetime class="date" [(ngModel)]="date" min="2020-01-01" max="2020-12-31"
                         dayShortNames="Montag, Dienstag, Mittwoch, Donnerstag, Freitag, Samstag, Sonntag"
                         monthShortNames="Januar, Februar, März, April, Mai, Juni, Juli, August, September, Oktober, November, Dezember"
-                        cancelText="Abbrechen" doneText="Fertig" placeholder="Datum eingeben" formControlName="dateForm"></ion-datetime>
+                        cancelText="Abbrechen" doneText="Fertig" placeholder="Datum eingeben"
+                        formControlName="dateForm"></ion-datetime>
                 </ion-col>
             </ion-row>
             <ion-row>
@@ -51,7 +52,8 @@
             </ion-row>
             <ion-row>
                 <ion-col offset=4 size=4>
-                    <ion-select class="NumberOfPerson" [(ngModel)]="numberOfPersons" placeholder="Personenanzahl" formControlName="numberOfPersonsForm">
+                    <ion-select class="NumberOfPerson" [(ngModel)]="numberOfPersons" placeholder="Personenanzahl"
+                        formControlName="numberOfPersonsForm">
                         <ion-select-option value="1">1</ion-select-option>
                         <ion-select-option value="2">2</ion-select-option>
                         <ion-select-option value="3">3</ion-select-option>
@@ -65,8 +67,7 @@
             <ion-row>
                 <ion-col offset=4 size=4>
                     <ion-item class="Voucher">
-                        <ion-label position="floating">Gutscheincode</ion-label>
-                        <ion-input></ion-input>
+                        <ion-input (ionBlur)="calculateDiscountedPrice()" [(ngModel)]="voucherCode" [ngModelOptions]="{standalone: true}" placeholder="Gutscheincode"></ion-input>
                     </ion-item>
                 </ion-col>
             </ion-row>
@@ -90,7 +91,8 @@
 
             <ion-row>
                 <ion-col offset=4 size=4>
-                    <ion-button type="submit" class="Buchen" *ngIf="visability" (click)="createJourney()" color="warning" [disabled]="!journeyForm.valid">Taxifahrt
+                    <ion-button type="submit" class="Buchen" *ngIf="visability" (click)="createJourney()"
+                        color="warning" [disabled]="!journeyForm.valid">Taxifahrt
                         buchen
                     </ion-button>
                 </ion-col>

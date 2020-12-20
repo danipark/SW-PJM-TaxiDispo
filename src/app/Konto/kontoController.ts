@@ -92,33 +92,43 @@ export class KontoPage {
   }
 
   async createPopupForVoucher() {
-    const alert = await this.alertController.create({
-      header: 'Gutschein',
-      message: 'Für 1000 Punkte können Sie sich einen Gutschein-Code generieren. Dieser ermöglicht Ihnen 10% Rabatt bei der nächsten Taxifahrt!',
-      buttons: [
-        {
-          text: 'Cancel', role: 'cancel', cssClass: 'secondary', handler: () => { }
-        }, {
-          text: 'Gutschein-Code generieren',
-          handler: async () => {
-            this.voucher = {
-              active: true,
-              userID: this.currentUser.id
-            }
 
-            this.kontoService.addVoucher(this.voucher).subscribe((res) => {
-              this.voucherID = res._id;
-              this.User.points = this.User.points - 1000;
-              this.updateUser(this.currentUser);
-              this.points = this.User.points;
-              this.alertWithVoucherCode();
-              console.log("Gutschein-Code: " +this.voucherID)
-            });
+    if (this.User.points >= 1000) {
+      const alert = await this.alertController.create({
+        header: 'Gutschein',
+        message: 'Für 1000 Punkte können Sie sich einen Gutschein-Code generieren. Dieser ermöglicht Ihnen 10% Rabatt bei der nächsten Taxifahrt!',
+        buttons: [
+          {
+            text: 'Cancel', role: 'cancel', cssClass: 'secondary', handler: () => { }
+          }, {
+            text: 'Gutschein-Code generieren',
+            handler: async () => {
+              this.voucher = {
+                active: true,
+                userID: this.currentUser.id
+              }
+
+              this.kontoService.addVoucher(this.voucher).subscribe((res) => {
+                this.voucherID = res._id;
+                this.calculateNewPoints();
+                this.updateUser(this.currentUser);
+                this.points = this.User.points;
+                this.alertWithVoucherCode();
+                console.log("Gutschein-Code: " + this.voucherID)
+              });
+            }
           }
-        }
-      ]
-    });
-    await alert.present();
+        ]
+      });
+      await alert.present();
+    } else {
+      this.alertNotEnoughPointsForVoucher();
+    }
+
+  }
+
+  calculateNewPoints(){
+    this.User.points = this.User.points - 1000;
   }
 
   async alertWithVoucherCode() {
@@ -131,6 +141,18 @@ export class KontoPage {
         }
       ]
     })
+    await alert.present();
+  }
+
+  async alertNotEnoughPointsForVoucher(){
+    const alert = await this.alertController.create({
+      header: 'Gutschein',
+      message: 'Leider besitzen Sie noch nicht genügend Punkte für einen 10% Rabatt Gutscheincode!',
+      buttons: [
+        {
+          text: 'Cancel', role: 'cancel', cssClass: 'secondary', handler: () => { }
+        }]
+    });
     await alert.present();
   }
   updateUser(currentUser) {

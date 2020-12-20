@@ -86,7 +86,7 @@ export class AuthService {
     return this.http.put('http://localhost:3000/api/update-user/' + id, user)
       .pipe(
         tap(_ => console.log(`User updated: ${id}`)),
-        catchError(this.handleError<User[]>('Update Taxi'))
+        catchError(this.handleError<User[]>('Update User'))
       );
   }
   
