@@ -194,9 +194,6 @@ export class JourneyPage implements OnInit {
             return actions.order.capture()
               .then(function (details) {
                 _this.createJourney();
-                // _this.clearField();
-                //  alert('Bezahlung von ' + _this.paymentAmount + ' € erfolgreich durchgeführt von: ' + details.payer.name.given_name + '!');
-
               })
               .catch(err => {
                 console.log(err);
@@ -276,7 +273,6 @@ export class JourneyPage implements OnInit {
 
       var self = this;
       this.geocoderziel.on('clear', function (e) {
-
         var layer = self.map.getLayer;
         if (this.layer = 'route') {
           self.map.removeLayer('route');
@@ -506,14 +502,13 @@ export class JourneyPage implements OnInit {
       })
     })
   }
-
-
   async createPopup() {
     const alert = await this.alertController.create({
       header: 'Vielen Dank!',
       message: 'Ihr Taxi wurde erfolgreich gebucht. Die Kosten betragen: ' + this.price + "€",
       buttons: ['OK']
     });
+    this.clearVoucherField();
     this.geocoderstart.clear();
     this.date = "";
     this.time = "";
@@ -523,14 +518,4 @@ export class JourneyPage implements OnInit {
 
     await alert.present();
   }
-  async clearField() {
-    this.geocoderstart.clear();
-    this.date = "";
-    this.time = "";
-    this.numberOfPersons = 0;
-    this.paymentType = "";
-    this.price = 0;
-  }
-
-
 }

@@ -25,18 +25,7 @@ voucherRoute.route('/voucher').get((req, res) => {
         }
     })
 })
-
-// Get single Voucher
-/*voucherRoute.route('/voucher/:id').get((req, res) => {
-    VoucherModel.find({_id: {"$in": req.params.id }}, (error, data) => {
-        if (error) {
-            return next(error)
-        } else {
-            res.json(data)
-        }
-    })
-})*/
-
+//Get single Voucher
 voucherRoute.get('/voucher/:id', async (req, res) => {
     try {
      const voucher = await VoucherModel.findById(req.params.id);
@@ -62,7 +51,6 @@ voucherRoute.route('/voucher/:id').put((req, res, next) => {
     })
 })
 // Helper Functions
-
 function voucherNotFoundError(res) {
     res.status(404).send('Voucher not found');
 }   
