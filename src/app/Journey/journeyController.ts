@@ -272,7 +272,7 @@ export class JourneyPage implements OnInit {
       document.getElementById('geocoderziel').appendChild(this.geocoderziel.onAdd(this.map));
 
       var self = this;
-      this.geocoderziel.on('clear', function (e) {
+      this.geocoderziel.on('delete', function (e) {
         var layer = self.map.getLayer;
         if (this.layer = 'route') {
           self.map.removeLayer('route');
@@ -510,6 +510,7 @@ export class JourneyPage implements OnInit {
     });
     this.clearVoucherField();
     this.geocoderstart.clear();
+    this.geocoderziel.clear();
     this.date = "";
     this.time = "";
     this.numberOfPersons = 0;

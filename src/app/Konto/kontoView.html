@@ -10,7 +10,7 @@
 </ion-header>
 
 <ion-content>
-     <!-- Code für die Punkte -->
+    <!-- Code für die Punkte -->
     <ion-card>
         <ion-grid>
             <ion-row>
@@ -20,22 +20,19 @@
                 <ion-col>
                     <ion-button (click)="createPopupForVoucher()" color="warning">
                         <h4> {{points}} </h4>
-                    </ion-button>                       
+                    </ion-button>
                 </ion-col>
             </ion-row>
         </ion-grid>
     </ion-card>
 
-    <!-- Button für PDF generation
-    <button (click)="generatePdf()">Open PDF</button> -->
-    <!-- Code für die Taxifahrten-Tabelle -->
     <ion-scroll scrollX="true" scrollY="true" zoom="false" no-padding>
         <ion-card>
             <h4> Taxifahrten: </h4>
             <ion-grid>
                 <!------------------- HEADER ----------------------->
                 <ion-row class="test">
-                    
+
                     <ion-col>
                         <h5>Datum</h5>
                     </ion-col>
