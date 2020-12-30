@@ -7,7 +7,7 @@ let Journey = new Schema({
   date: { type: String },
   time: { type: String },
   numberOfPersons: { type: Number },
-  userID: {type: String}
+  userID: { type: String }
 }, {
   collection: 'journey'
 })

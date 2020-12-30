@@ -17,14 +17,14 @@ export class TaxirouteService {
   constructor(private http: HttpClient) { }
 
   addTaxiroute(taxiroute: Taxiroute): Observable<any> {
-    return this.http.post<Taxiroute>('http://localhost:3000/api/create-taxiroute', taxiroute, this.httpOptions)
+    return this.http.post<Taxiroute>('http://localhost:3000/api/taxiroute', taxiroute, this.httpOptions)
       .pipe(
         catchError(this.handleError<Taxiroute>('Add Taxiroute'))
       );
   }
 
   getTaxirouteList(): Observable<Taxiroute[]> {
-    return this.http.get<Taxiroute[]>('http://localhost:3000/api/get-taxiroutes')
+    return this.http.get<Taxiroute[]>('http://localhost:3000/api/taxiroute')
       .pipe(
         tap(taxiroutes => console.log('Taxiroutes fetched!')),
         catchError(this.handleError<Taxiroute[]>('Get Taxiroutes', []))
@@ -32,7 +32,7 @@ export class TaxirouteService {
   }
 
   getTaxiroutesById(userID): Observable<Taxiroute[]> {
-    return this.http.get<Taxiroute[]>('http://localhost:3000/api/get-taxiroutes/'+userID)
+    return this.http.get<Taxiroute[]>('http://localhost:3000/api/taxiroute/' + userID)
       .pipe(
         tap(taxiroutes => console.log('Taxiroutes fetched!')),
         catchError(this.handleError<Taxiroute[]>('Get Taxiroutes', []))

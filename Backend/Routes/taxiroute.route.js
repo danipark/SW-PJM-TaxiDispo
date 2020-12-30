@@ -5,7 +5,7 @@ const taxirouteRoute = express.Router();
 let TaxirouteModel = require('../Taxi/Taxiroute');
 
 // Add Taxiroute
-taxirouteRoute.route('/create-taxiroute').post((req, res, next) => {
+taxirouteRoute.route('/taxiroute').post((req, res, next) => {
     TaxirouteModel.create(req.body, (error, data) => {
         if (error) {
             return next(error)
@@ -16,7 +16,7 @@ taxirouteRoute.route('/create-taxiroute').post((req, res, next) => {
 });
 
 // Get all Taxiroutes
-taxirouteRoute.route('/get-taxiroutes').get((req, res) => {
+taxirouteRoute.route('/taxiroute').get((req, res) => {
     TaxirouteModel.find((error, data) => {
         if (error) {
             return next(error)
@@ -27,8 +27,8 @@ taxirouteRoute.route('/get-taxiroutes').get((req, res) => {
 })
 
 // Get single Taxioute
-taxirouteRoute.route('/get-taxiroutes/:id').get((req, res) => {
-    TaxirouteModel.find({userID: {"$in":req.params.id}}, (error, data) => {
+taxirouteRoute.route('/taxiroute/:id').get((req, res) => {
+    TaxirouteModel.find({ userID: { "$in": req.params.id } }, (error, data) => {
         if (error) {
             return next(error)
         } else {

@@ -17,14 +17,14 @@ export class TaxiService {
   constructor(private http: HttpClient) { }
 
   addTaxi(taxi: Taxi): Observable<any> {
-    return this.http.post<Taxi>('http://localhost:3000/api/create-taxi', taxi, this.httpOptions)
+    return this.http.post<Taxi>('http://localhost:3000/api/taxi', taxi, this.httpOptions)
       .pipe(
         catchError(this.handleError<Taxi>('Add Taxi'))
       );
   }
 
   getTaxi(id): Observable<Taxi[]> {
-    return this.http.get<Taxi[]>('http://localhost:3000/api/get-taxi/' + id)
+    return this.http.get<Taxi[]>('http://localhost:3000/api/taxi/' + id)
       .pipe(
         tap(_ => console.log(`Song fetched: ${id}`)),
         catchError(this.handleError<Taxi[]>(`Get Taxi id=${id}`))
@@ -32,7 +32,7 @@ export class TaxiService {
   }
 
   getTaxiList(): Observable<Taxi[]> {
-    return this.http.get<Taxi[]>('http://localhost:3000/api/get-taxis')
+    return this.http.get<Taxi[]>('http://localhost:3000/api/taxi')
       .pipe(
         tap(taxis => console.log('Taxis fetched!')),
         catchError(this.handleError<Taxi[]>('Get Taxis', []))
@@ -40,7 +40,7 @@ export class TaxiService {
   }
 
   updateTaxi(id, taxi: Taxi): Observable<any> {
-    return this.http.put('http://localhost:3000/api/update-taxi/' + id, taxi, this.httpOptions)
+    return this.http.put('http://localhost:3000/api/taxi/' + id, taxi, this.httpOptions)
       .pipe(
         tap(_ => console.log(`Taxi updated: ${id}`)),
         catchError(this.handleError<Taxi[]>('Update Taxi'))
@@ -48,7 +48,7 @@ export class TaxiService {
   }
 
   deleteTaxi(id): Observable<Taxi[]> {
-    return this.http.delete<Taxi[]>('http://localhost:3000/api/delete-taxi/' + id, this.httpOptions)
+    return this.http.delete<Taxi[]>('http://localhost:3000/api/taxi/' + id, this.httpOptions)
       .pipe(
         tap(_ => console.log(`Taxi deleted: ${id}`)),
         catchError(this.handleError<Taxi[]>('Delete Taxi'))

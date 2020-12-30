@@ -67,7 +67,7 @@ export class AuthService {
 
   getUser(id): Observable<User[]>{
      console.log("getUser vor return")
-    return this.http.get<User[]>('http://localhost:3000/api/get-user/' + id)
+    return this.http.get<User[]>('http://localhost:3000/api/user/' + id)
     .pipe(
       tap(_ => console.log(`User fetched: ${id}`)),
       catchError(this.handleError<User[]>(`Get User id=${id}`))
@@ -83,7 +83,7 @@ export class AuthService {
   }
 
   updateUser(id, user: User){
-    return this.http.put('http://localhost:3000/api/update-user/' + id, user)
+    return this.http.put('http://localhost:3000/api/user/' + id, user)
       .pipe(
         tap(_ => console.log(`User updated: ${id}`)),
         catchError(this.handleError<User[]>('Update User'))

@@ -5,7 +5,7 @@ const taxiRoute = express.Router();
 let TaxiModel = require('../Taxi/Taxi');
 
 // Add Taxi
-taxiRoute.route('/create-Taxi').post((req, res, next) => {
+taxiRoute.route('/taxi').post((req, res, next) => {
     TaxiModel.create(req.body, (error, data) => {
         if (error) {
             return next(error)
@@ -16,7 +16,7 @@ taxiRoute.route('/create-Taxi').post((req, res, next) => {
 });
 
 // Get all taxis
-taxiRoute.route('/get-taxis').get((req, res) => {
+taxiRoute.route('/taxi').get((req, res) => {
     TaxiModel.find((error, data) => {
         if (error) {
             return next(error)
@@ -27,7 +27,7 @@ taxiRoute.route('/get-taxis').get((req, res) => {
 })
 
 // Get single Taxi
-taxiRoute.route('/get-taxi/:id').get((req, res) => {
+taxiRoute.route('/taxi/:id').get((req, res) => {
     TaxiModel.findById(req.params.id, (error, data) => {
         if (error) {
             return next(error)
@@ -39,7 +39,7 @@ taxiRoute.route('/get-taxi/:id').get((req, res) => {
 
 
 // Update taxi
-taxiRoute.route('/update-taxi/:id').put((req, res, next) => {
+taxiRoute.route('/taxi/:id').put((req, res, next) => {
     TaxiModel.findByIdAndUpdate(req.params.id, {
         $set: req.body
     }, (error, data) => {
@@ -54,7 +54,7 @@ taxiRoute.route('/update-taxi/:id').put((req, res, next) => {
 })
 
 // Delete taxi
-taxiRoute.route('/delete-taxi/:id').delete((req, res, next) => {
+taxiRoute.route('/taxi/:id').delete((req, res, next) => {
     TaxiModel.findByIdAndRemove(req.params.id, (error, data) => {
         if (error) {
             return next(error);

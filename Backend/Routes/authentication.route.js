@@ -5,6 +5,6 @@ var passport = require('passport');
 
 routes.post('/register', userController.registerUser);
 routes.post('/login', userController.loginUser);
-routes.get('/get-user/:id', userController.getUser)
-routes.put('/update-user/:id', userController.updateUser)
+routes.get('/user/:id', userController.getUser)
+routes.put('/user/:id', userController.updateUser)
 module.exports = routes;

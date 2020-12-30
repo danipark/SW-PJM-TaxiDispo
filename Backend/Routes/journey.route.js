@@ -5,7 +5,7 @@ const journeyRoute = express.Router();
 let JourneyModel = require('../Taxi/Journey');
 
 // Add Journey
-journeyRoute.route('/create-journey').post((req, res, next) => {
+journeyRoute.route('/journey').post((req, res, next) => {
     JourneyModel.create(req.body, (error, data) => {
         if (error) {
             return next(error)
@@ -16,7 +16,7 @@ journeyRoute.route('/create-journey').post((req, res, next) => {
 });
 
 // Get all Journeys
-journeyRoute.route('/get-journeys').get((req, res) => {
+journeyRoute.route('/journey').get((req, res) => {
     JourneyModel.find((error, data) => {
         if (error) {
             return next(error)
@@ -27,8 +27,8 @@ journeyRoute.route('/get-journeys').get((req, res) => {
 })
 
 // Get single Journey
-journeyRoute.route('/get-journeys/:id').get((req, res) => {
-    JourneyModel.find({userID: {"$in": req.params.id }}, (error, data) => {
+journeyRoute.route('/journey/:id').get((req, res) => {
+    JourneyModel.find({ userID: { "$in": req.params.id } }, (error, data) => {
         if (error) {
             return next(error)
         } else {

@@ -17,14 +17,14 @@ export class JourneyService {
   constructor(private http: HttpClient) { }
 
   addJourney(journey: Journey): Observable<any> {
-    return this.http.post<Journey>('http://localhost:3000/api/create-journey', journey, this.httpOptions)
+    return this.http.post<Journey>('http://localhost:3000/api/journey', journey, this.httpOptions)
       .pipe(
         catchError(this.handleError<Journey>('Add Journey'))
       );
   }
 
   getJourneyList(): Observable<Journey[]> {
-    return this.http.get<Journey[]>('http://localhost:3000/api/get-journeys')
+    return this.http.get<Journey[]>('http://localhost:3000/api/journey')
       .pipe(
         tap(journeys => console.log('Journeys fetched!')),
         catchError(this.handleError<Journey[]>('Get Journeys', []))
@@ -32,13 +32,13 @@ export class JourneyService {
   }
 
   getJourneysById(userID): Observable<Journey[]> {
-    return this.http.get<Journey[]>('http://localhost:3000/api/get-journeys/'+userID)
+    return this.http.get<Journey[]>('http://localhost:3000/api/journey/' + userID)
       .pipe(
         tap(journeys => console.log('Journeys fetched!')),
         catchError(this.handleError<Journey[]>('Get Journeys', []))
       );
   }
-  
+
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       console.error(error);
