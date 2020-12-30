@@ -415,6 +415,7 @@ export class JourneyPage implements OnInit {
           this.voucher.active = false;
           this.kontoService.updateVoucher(this.voucherCode, this.voucher).subscribe((res) => {
           })
+          this.createPopUpForSuccessfulVoucher();
         } else {
           this.createPopUpForInvalidVoucher();
           this.clearVoucherField();
@@ -422,6 +423,18 @@ export class JourneyPage implements OnInit {
       })
     } else {
     }
+  }
+
+  async createPopUpForSuccessfulVoucher() {
+    const alert = await this.alertController.create({
+      header: 'Gutschein',
+      message: 'Ihr Gutschein ist gültig und Sie bekommen einen Nachlass von 10% auf ihre Fahrt. Der neue Fahrtenpreis beträgt nun ' + this.price + '€.',
+      buttons: [
+        {
+          text: 'OK', role: 'cancel', cssClass: 'secondary', handler: () => { }
+        }]
+    });
+    await alert.present();
   }
 
   async createPopUpForInvalidVoucher() {
