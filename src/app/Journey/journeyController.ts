@@ -519,4 +519,6 @@ export class JourneyPage implements OnInit {
 
     await alert.present();
   }
+
+
 }

@@ -13,7 +13,8 @@ import { Router } from '@angular/router';
 })
 export class AppComponent {
 
-  navigate : any;
+  navigate: any;
+  currentUser: any;
 
   constructor(
     private platform: Platform,
@@ -22,7 +23,7 @@ export class AppComponent {
     private authService: AuthService,
     private router: Router
   ) {
-    this.sideMenu();
+
     this.initializeApp();
   }
 
@@ -34,27 +35,48 @@ export class AppComponent {
       this.authService.authenticationState.subscribe(state => {
         if (state) {
           this.router.navigate(['global']);
+          this.currentUser = this.authService.user;
+          this.sideMenu()
         } else {
           this.router.navigate(['login']);
+          this.currentUser = this.authService.user;
         }
       });
     });
   }
 
-  sideMenu()
-  {
+  sideMenu() {
+    if (this.currentUser.role === 'customer' || this.currentUser.role === 'businessCustomer') {
+      this.navigationForCustomers();
+    } else {
+      this.navigationForEmployees();
+    }
+  }
+
+  navigationForCustomers() {
     this.navigate =
-    [
-      {
-        title : "Konto",
-        url   : "/TaxiDispo/account",
-        icon  : "person"
-      },
-      {
-        title : "Logout",
-        url   : "/login",
-        icon  : "power",
-      }
-    ]
+      [
+        {
+          title: "Konto",
+          url: "/TaxiDispo/account",
+          icon: "person"
+        },
+        {
+          title: "Logout",
+          url: "/login",
+          icon: "power",
+        }
+      ]
+  }
+
+  navigationForEmployees() {
+    this.navigate =
+      [
+        {
+          title: "Logout",
+          url: "/login",
+          icon: "power"
+        }
+      ]
   }
 }
