@@ -44,28 +44,40 @@ export class TaxiManagementPage implements OnInit {
   dezSales = 0;
   totalSales = 0;
 
-    //Variablen für KM
-    janKM = 0;
-    febKM = 0;
-    maeKM = 0;
-    aprKM = 0;
-    maiKM = 0;
-    junKM = 0;
-    julKM = 0;
-    augKM = 0;
-    sepKM = 0;
-    oktKM = 0;
-    novKM = 0;
-    dezKM = 0;
-    totalKM = 0
+  //Variablen für KM
+  janKM = 0;
+  febKM = 0;
+  maeKM = 0;
+  aprKM = 0;
+  maiKM = 0;
+  junKM = 0;
+  julKM = 0;
+  augKM = 0;
+  sepKM = 0;
+  oktKM = 0;
+  novKM = 0;
+  dezKM = 0;
+  totalKM = 0
+
+  //Variablen für createSalesData and createKMData
+  jan = "01";
+  feb = "02";
+  mae = "03";
+  apr = "04";
+  mai = "05";
+  jun = "06";
+  jul = "07";
+  aug = "08";
+  sep = "09";
+  okt = "10";
+  nov = "11";
+  dez = "12";
 
   constructor(
     private taxiService: TaxiService,
     private journeyService: JourneyService,
     private taxiRouteService: TaxirouteService,
   ) { }
-
-
 
   monthArray = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
   months = [
@@ -86,51 +98,33 @@ export class TaxiManagementPage implements OnInit {
   toMonth = '11';
 
 
-  ngOnInit() {
-
-
-  }
+  ngOnInit() { }
 
   ionViewDidEnter() {
 
+    this.getListofTaxis();
+    this.getListOfJourneys();
+    this.getListOfTaxiRoutes();
+  }
 
+
+  getListofTaxis() {
     this.taxiService.getTaxiList().subscribe((res) => {
       this.Taxis = res;
-      console.log(this.Taxis);
     });
+  }
 
+  getListOfJourneys() {
     this.journeyService.getJourneyList().subscribe((res) => {
       this.Journeys = res;
-      console.log(this.Journeys);
-
-
     });
+  }
 
+  getListOfTaxiRoutes() {
     this.taxiRouteService.getTaxirouteList().subscribe((res) => {
       this.TaxiRoutes = res;
-      console.log(this.TaxiRoutes);
-      console.log(this.TaxiRoutes.length);
-      //YYY-MM-DD
-      for (let i = 0; i < this.TaxiRoutes.length; i++) {
-        var sales = {
-          date: Number,
-          price: Number
-        };
-        sales.date = this.TaxiRoutes[i].date.split("-")[1];
-        sales.price = this.TaxiRoutes[i].price;
-        this.salesArray.push(sales);
 
-        var km = {
-          date: Number,
-          completeDistance: Number
-        };
-        km.date = this.TaxiRoutes[i].date.split("-")[1];
-        km.completeDistance = this.TaxiRoutes[i].completeDistance;
-        this.kmArray.push(km);
-      };
-
-      console.log(this.kmArray);
-
+      this.fetchNecessaryDatas();
       this.createSalesData();
       this.createKMData();
       this.generateColorPies(12);
@@ -138,7 +132,35 @@ export class TaxiManagementPage implements OnInit {
       this.createBarChartSales();
       this.createPieChartSales();
     });
+  }
 
+  fetchNecessaryDatas() {
+    this.fetchSalesData();
+    this.fetchKmData();
+  }
+
+  fetchSalesData() {
+    for (let i = 0; i < this.TaxiRoutes.length; i++) {
+      var sales = {
+        date: Number,
+        price: Number
+      };
+      sales.date = this.TaxiRoutes[i].date.split("-")[1];
+      sales.price = this.TaxiRoutes[i].price;
+      this.salesArray.push(sales);
+    }
+  }
+
+  fetchKmData() {
+    for (let i = 0; i < this.TaxiRoutes.length; i++) {
+      var km = {
+        date: Number,
+        completeDistance: Number
+      };
+      km.date = this.TaxiRoutes[i].date.split("-")[1];
+      km.completeDistance = this.TaxiRoutes[i].completeDistance;
+      this.kmArray.push(km);
+    }
   }
 
   generateColorPies(num) {
@@ -146,7 +168,6 @@ export class TaxiManagementPage implements OnInit {
     for (let i = 0; i < num; i++) {
       this.colorPies.push('#' + Math.floor(Math.random() * 16777215).toString(16));
     }
-
   }
 
   createBarChartKM() {
@@ -156,9 +177,9 @@ export class TaxiManagementPage implements OnInit {
         labels: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
         datasets: [{
           label: 'in KM',
-          data: [this.janKM, this.febKM, this.maeKM, this.aprKM, 
-            this.maiKM, this.junKM, this.julKM, this.augKM, this.sepKM, 
-            this.oktKM, this.novKM, this.dezKM],
+          data: [this.janKM, this.febKM, this.maeKM, this.aprKM,
+          this.maiKM, this.junKM, this.julKM, this.augKM, this.sepKM,
+          this.oktKM, this.novKM, this.dezKM],
           backgroundColor: this.colorPies, // array should have same number of elements as number of dataset
           borderColor: this.colorPies,// array should have same number of elements as number of dataset
           borderWidth: 1
@@ -233,8 +254,6 @@ export class TaxiManagementPage implements OnInit {
     });
   }
 
-
-
   removeData(chart) {
     chart.data.labels.pop();
     chart.data.datasets.forEach((dataset) => {
@@ -258,71 +277,54 @@ export class TaxiManagementPage implements OnInit {
     this.barChartKM.update();
   }
   createSalesData() {
-    var jan = "01";
-    var feb = "02";
-    var mae = "03";
-    var apr = "04";
-    var mai = "05";
-    var jun = "06";
-    var jul = "07";
-    var aug = "08";
-    var sep = "09";
-    var okt = "10";
-    var nov = "11";
-    var dez = "12";
-
-
     for (var i = 0; i < this.salesArray.length; i++) {
 
-
-      console.log(this.salesArray[i].date);
-
       switch (this.salesArray[i].date) {
-        case jan:
+        case this.jan:
           this.janSales = this.janSales + this.salesArray[i].price;
           break;
 
-        case feb:
+        case this.feb:
           this.febSales = this.febSales + this.salesArray[i].price;
           break;
 
-        case mae:
+        case this.mae:
           this.maeSales = this.maeSales + this.salesArray[i].price;
           break;
 
-        case apr:
+        case this.apr:
           this.aprSales = this.aprSales + this.salesArray[i].price;
           break;
 
-        case mai:
+        case this.mai:
           this.maiSales = this.maiSales + this.salesArray[i].price;
           break;
 
-        case jun:
+        case this.jun:
           this.junSales = this.junSales + this.salesArray[i].price;
           break;
 
-        case jul:
+        case this.jul:
           this.julSales = this.julSales + this.salesArray[i].price;
           break;
 
-        case aug:
+        case this.aug:
           this.augSales = this.augSales + this.salesArray[i].price;
           break;
 
-        case sep:
+        case this.sep:
           this.sepSales = this.sepSales + this.salesArray[i].price;
           break;
 
-        case okt:
+        case this.okt:
           this.oktSales = this.oktSales + this.salesArray[i].price;
           break;
 
-        case nov:
+        case this.nov:
           this.novSales = this.novSales + this.salesArray[i].price;
           break;
 
-        case dez:
+        case this.dez:
           this.dezSales = this.dezSales + this.salesArray[i].price;
           break;
 
@@ -334,83 +336,66 @@ export class TaxiManagementPage implements OnInit {
         this.novSales + this.dezSales
     }
   }
-  createKMData(){
-    var jan = "01";
-    var feb = "02";
-    var mae = "03";
-    var apr = "04";
-    var mai = "05";
-    var jun = "06";
-    var jul = "07";
-    var aug = "08";
-    var sep = "09";
-    var okt = "10";
-    var nov = "11";
-    var dez = "12";
 
+  createKMData() {
+    for (var i = 0; i < this.kmArray.length; i++) {
 
-    for (var i=0; i<this.kmArray.length; i++){
-      
-      
-      console.log(this.kmArray[i].date);
-      
-    switch(this.kmArray[i].date){
-      case jan:
-        this.janKM = this.janKM + this.kmArray[i].completeDistance;
-      break;
+      switch (this.kmArray[i].date) {
+        case this.jan:
+          this.janKM = this.janKM + this.kmArray[i].completeDistance;
+          break;
 
-      case feb:
-        this.febKM = this.febKM + this.kmArray[i].completeDistance;
-      break;
+        case this.feb:
+          this.febKM = this.febKM + this.kmArray[i].completeDistance;
+          break;
 
-      case mae:
-        this.maeKM = this.maeKM + this.kmArray[i].completeDistance;
-      break;
+        case this.mae:
+          this.maeKM = this.maeKM + this.kmArray[i].completeDistance;
+          break;
 
-      case apr:
-        this.aprKM = this.aprKM + this.kmArray[i].completeDistance;
-      break;
+        case this.apr:
+          this.aprKM = this.aprKM + this.kmArray[i].completeDistance;
+          break;
 
-      case mai:
-        this.maiKM = this.maiKM + this.kmArray[i].completeDistance;
-      break;
+        case this.mai:
+          this.maiKM = this.maiKM + this.kmArray[i].completeDistance;
+          break;
 
-      case jun:
-        this.junKM = this.junKM + this.kmArray[i].completeDistance;
-      break;
+        case this.jun:
+          this.junKM = this.junKM + this.kmArray[i].completeDistance;
+          break;
 
-      case jul:
-        this.julKM = this.julKM + this.kmArray[i].completeDistance;
-      break;
+        case this.jul:
+          this.julKM = this.julKM + this.kmArray[i].completeDistance;
+          break;
 
-      case aug:
-        this.augKM = this.augKM + this.kmArray[i].completeDistance;
-      break;
+        case this.aug:
+          this.augKM = this.augKM + this.kmArray[i].completeDistance;
+          break;
 
-      case sep:
-        this.sepKM = this.sepKM + this.kmArray[i].completeDistance;
-      break;
+        case this.sep:
+          this.sepKM = this.sepKM + this.kmArray[i].completeDistance;
+          break;
 
-      case okt:
-        this.oktKM = this.oktKM + this.kmArray[i].completeDistance;
-      break;
+        case this.okt:
+          this.oktKM = this.oktKM + this.kmArray[i].completeDistance;
+          break;
 
-      case nov:
-        this.novKM = this.novKM + this.kmArray[i].completeDistance;
-      break;
+        case this.nov:
+          this.novKM = this.novKM + this.kmArray[i].completeDistance;
+          break;
 
-      case dez:
-        this.dezKM = this.dezKM + this.kmArray[i].completeDistance;
-      break;
+        case this.dez:
+          this.dezKM = this.dezKM + this.kmArray[i].completeDistance;
+          break;
 
+      }
+      this.totalKM = this.janKM + this.febKM +
+        this.maeKM + this.aprKM + this.maiKM +
+        this.aprKM + this.junKM + this.julKM +
+        this.augKM + this.sepKM + this.oktKM +
+        this.novKM + this.dezKM
     }
-    this.totalKM = this.janKM + this.febKM + 
-    this.maeKM + this.aprKM + this.maiKM + 
-    this.aprKM + this.junKM + this.julKM + 
-    this.augKM + this.sepKM + this.oktKM + 
-    this.novKM + this.dezKM
-    console.log(this.totalKM);
-  }
   }
 
 }
