@@ -37,10 +37,9 @@ export class JourneyPage implements OnInit {
   smallestValue: any;
 
   //Koordinaten
+  geoOptions: any;
   public latitude: number;
   public longitude: number;
-  public latitude2: number;
-  public longitude2: number;
   public map: Mapboxgl.Map;
   Taxis: any = [];
   dateFormat: any;
@@ -119,22 +118,35 @@ export class JourneyPage implements OnInit {
   currency: string = 'EUR';
   currencyIcon: string = '€';
 
-
-
   //Button nur 1x klicken
   disableButton;
 
   ngOnInit() {
-
     this.buildJourneyForm();
+    this.setGeoOptions();
+    this.getCurrentPosition(this.geoOptions);
+  }
 
+  buildJourneyForm() {
+    this.journeyForm = this.formBuilder.group({
+      dateForm: ['', [Validators.required, Validators.minLength(1)]],
+      timeForm: ['', [Validators.required, Validators.minLength(1)]],
+      numberOfPersonsForm: ['', [Validators.required, Validators.minLength(1)]],
+      paymentTypeForm: ['', [Validators.required, Validators.minLength(1)]],
+    });
+  }
+
+  setGeoOptions() {
     var geoOptions: GeolocationOptions = {
       enableHighAccuracy: true,
       timeout: 5000,
       maximumAge: 0
     }
-    this.geolocation.getCurrentPosition(geoOptions).then((resp) => {
+    return geoOptions
+  }
 
+  getCurrentPosition(geoOptions) {
+    this.geolocation.getCurrentPosition(geoOptions).then((resp) => {
       this.latitude = resp.coords.latitude;
       this.longitude = resp.coords.longitude;
       var url = "https://api.mapbox.com/geocoding/v5/mapbox.places/" + this.longitude + "," + this.latitude + ".json?language=de&access_token=" + environment.mapboxKey;
@@ -146,17 +158,36 @@ export class JourneyPage implements OnInit {
     })
   }
 
+  ngAfterViewInit() {
 
-  buildJourneyForm() {
-    this.journeyForm = this.formBuilder.group({
-      dateForm: ['', [Validators.required, Validators.minLength(1)]],
-      timeForm: ['', [Validators.required, Validators.minLength(1)]],
-      numberOfPersonsForm: ['', [Validators.required, Validators.minLength(1)]],
-      paymentTypeForm: ['', [Validators.required, Validators.minLength(1)]],
+    setTimeout(() => {
+      this.createMapboxMap();
+      this.map.addControl(new Mapboxgl.NavigationControl());
+      this.createMarkerForUserLocation();
+      this.calculateAdressOfLatLng();
+      this.createMarkerForTaxiLocations();
+      this.createSearchFieldForStartPoint();
+      this.createSearchFieldForDestinationPoint();
+    }, 2000);
+  }
+
+  createMapboxMap() {
+    this.map = new Mapboxgl.Map({
+      accessToken: environment.mapboxKey,
+      container: 'map', // container id
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center: [this.longitude, this.latitude], // LNG, LAT
+      zoom: 14 // starting zoom
     });
   }
 
-  public sendGetRequest() {
+  createMarkerForUserLocation() {
+    new Mapboxgl.Marker()
+      .setLngLat([this.longitude, this.latitude])
+      .addTo(this.map);
+  }
+
+  calculateAdressOfLatLng() {
     var url = "https://api.mapbox.com/geocoding/v5/mapbox.places/" + this.longitude + "," + this.latitude + ".json?language=de&access_token=" + environment.mapboxKey;
     this.http.get(url).subscribe((results: any) => {
       this.startPoint = results.features[0].place_name;
@@ -164,123 +195,62 @@ export class JourneyPage implements OnInit {
     });
   }
 
-  selectOnlinePayment(event) {
-    this.selectedOption = event.detail.value;
-    if (this.selectedOption == "paypal") {
-      this.calculateTaxiRoutes();
-      this.paymentAmount = this.price;
-      this.visability = false;
-      let _this = this;
-      setTimeout(() => {
-        window['paypal'].Buttons({
-          // Wird aufgerufen wenn PayPal Button ausgewählt wird
-          style: {
-            layout: "horizontal",
-            color: "gold",
-            shape: "rect",
-            label: "paypal"
-          },
-          createOrder: function (data, actions) {
-            return actions.order.create({
-              purchase_units: [{
-                amount: {
-                  value: _this.paymentAmount
-                }
-              }]
-            });
-          },
-          // Erfolgreiche Abwicklung
-          onApprove: function (data, actions) {
-            return actions.order.capture()
-              .then(function (details) {
-                _this.createJourney();
-              })
-              .catch(err => {
-                console.log(err);
-              })
-          }
-        }).render('#paypal-button-container');
-      }, 500)
-
-
-    } else {
-      this.visability = true;
-
+  createMarkerForTaxiLocations() {
+    for (let i = 0; i < this.Taxis.length; i++) {
+      new Mapboxgl.Marker({ "color": "yellow" })
+        .setLngLat([this.Taxis[i].taxiLongitude, this.Taxis[i].taxiLatitude])
+        .addTo(this.map);
+      this.calculateAdressOfLatLng();
     }
   }
 
-  ngAfterViewInit() {
+  createSearchFieldForStartPoint() {
+    this.geocoderstart = new MapboxGeocoder({
+      accessToken: environment.mapboxKey,
+      countries: 'de',
+      placeholder: this.startPoint,
+      mapboxgl: Mapboxgl
+    });
+    document.getElementById('geocoderstart').appendChild(this.geocoderstart.onAdd(this.map));
+    var self = this;
+    this.clearSearchFieldForStartPoint(self);
+  }
 
-    setTimeout(() => {
-      //Map
-      this.map = new Mapboxgl.Map({
-        accessToken: environment.mapboxKey,
-        container: 'map', // container id
-        style: 'mapbox://styles/mapbox/streets-v11',
-        center: [this.longitude, this.latitude], // LNG, LAT
-        zoom: 14 // starting zoom
-      });
-
-
-      this.map.addControl(new Mapboxgl.NavigationControl());
-
-
-      //Marker für User Standort
-      new Mapboxgl.Marker()
-        .setLngLat([this.longitude, this.latitude])
-        .addTo(this.map);
-      this.sendGetRequest();
-
-      //Taxi Marker
-      for (let i = 0; i < this.Taxis.length; i++) {
-        new Mapboxgl.Marker({ "color": "yellow" })
-          .setLngLat([this.Taxis[i].taxiLongitude, this.Taxis[i].taxiLatitude])
-          .addTo(this.map);
-        this.sendGetRequest();
-
-
-
+  clearSearchFieldForStartPoint(self) {
+    this.geocoderstart.on('clear', function (e) {
+      self.calculateAdressOfLatLng();
+      this.geocoderObjectStart = null;
+      var layer = self.map.getLayer;
+      if (this.layer = 'route') {
+        self.map.removeLayer('route');
+        self.map.removeSource('route');
+      } else {
       }
+    });
+  }
 
-      //Geocoderstart
-      this.geocoderstart = new MapboxGeocoder({
-        accessToken: environment.mapboxKey,
-        countries: 'de',
-        placeholder: this.startPoint,
-        mapboxgl: Mapboxgl
-      });
-      document.getElementById('geocoderstart').appendChild(this.geocoderstart.onAdd(this.map));
-      var self = this;
-      this.geocoderstart.on('clear', function (e) {
-        self.sendGetRequest();
-        this.geocoderObjectStart = null;
-        var layer = self.map.getLayer;
-        if (this.layer = 'route') {
-          self.map.removeLayer('route');
-          self.map.removeSource('route');
-        } else {
-        }
-      });
+  createSearchFieldForDestinationPoint() {
+    this.geocoderziel = new MapboxGeocoder({
+      accessToken: environment.mapboxKey,
+      countries: 'de',
+      placeholder: 'Zielpunkt eingeben',
+      mapboxgl: Mapboxgl
+    });
+    document.getElementById('geocoderziel').appendChild(this.geocoderziel.onAdd(this.map));
+    var self = this;
+    this.clearSearchFieldForDestinationPoint(self)
+  }
 
-      //Geocoderziel
-      this.geocoderziel = new MapboxGeocoder({
-        accessToken: environment.mapboxKey,
-        countries: 'de',
-        placeholder: 'Zielpunkt eingeben',
-        mapboxgl: Mapboxgl
-      });
-      document.getElementById('geocoderziel').appendChild(this.geocoderziel.onAdd(this.map));
-
-      var self = this;
-      this.geocoderziel.on('delete', function (e) {
-        var layer = self.map.getLayer;
-        if (this.layer = 'route') {
-          self.map.removeLayer('route');
-          self.map.removeSource('route');
-        } else {
-        }
-      });
-    }, 2000);
+  clearSearchFieldForDestinationPoint(self) {
+    this.geocoderziel.on('clear', function (e) {
+      var layer = self.map.getLayer;
+      if (this.layer = 'route') {
+        self.price = 0;
+        self.map.removeLayer('route');
+        self.map.removeSource('route');
+      } else {
+      }
+    });
   }
 
   createStartPoint() {
@@ -295,75 +265,67 @@ export class JourneyPage implements OnInit {
     this.geocoderObjectStart = JSON.parse(geocoderStartJSON);
 
     if (this.geocoderObjectStart == null) {
-      this.latitude = this.latitude;
-      this.longitude = this.longitude;
-      this.startPoint = this.startPoint;
-      this.urlDirectionsStart = "https://api.mapbox.com/directions/v5/mapbox/driving-traffic/" + this.longitude + "," + this.latitude + ";"
-
-
+      this.setUrlWhenStartpointIsEmpty();
     } else {
-      this.latitude2 = this.geocoderstart.mapMarker._lngLat.lat;
-      this.longitude2 = this.geocoderstart.mapMarker._lngLat.lng;
-      this.startPoint = this.geocoderObjectStart.place_name;
-
-      this.urlDirectionsStart = "https://api.mapbox.com/directions/v5/mapbox/driving-traffic/" + this.longitude2 + "," + this.latitude2 + ";"
-
+      this.setUrlWhenStartpointIsNotEmpty();
     }
-
     var geocoderZielJSON = this.geocoderziel.lastSelected;
     let geocoderObject = JSON.parse(geocoderZielJSON);
     this.endPoint = geocoderObject.place_name;
-
     this.latSearch = this.geocoderziel.mapMarker._lngLat.lat;
     this.lngSearch = this.geocoderziel.mapMarker._lngLat.lng;
 
+    this.calculateRouteDurationAndDistance();
+    this.calculateTaxiRoutes();
+  }
 
+  setUrlWhenStartpointIsEmpty() {
+    this.latitude = this.latitude;
+    this.longitude = this.longitude;
+    this.startPoint = this.startPoint;
+    this.urlDirectionsStart = "https://api.mapbox.com/directions/v5/mapbox/driving-traffic/" + this.longitude + "," + this.latitude + ";"
+  }
+
+  setUrlWhenStartpointIsNotEmpty() {
+    this.latitude = this.geocoderstart.mapMarker._lngLat.lat;
+    this.longitude = this.geocoderstart.mapMarker._lngLat.lng;
+    this.startPoint = this.geocoderObjectStart.place_name;
+    this.urlDirectionsStart = "https://api.mapbox.com/directions/v5/mapbox/driving-traffic/" + this.longitude + "," + this.latitude + ";"
+  }
+
+  calculateRouteDurationAndDistance() {
     var urlDirections = this.urlDirectionsStart + this.lngSearch + "," + this.latSearch + "?overview=full&annotations=duration,distance&geometries=geojson" + "&access_token="
       + environment.mapboxKey;
 
-    console.log("Test:" + urlDirections);
     this.http.get(urlDirections).subscribe((results: any) => {
       this.routeDuration = results.routes[0].duration / 60;
       this.routeDistance = results.routes[0].distance / 1000;
-      this.map.addLayer({
-        id: 'route',
-        type: 'line',
-        source: {
-          type: 'geojson',
-          data: {
-            type: 'Feature',
-            properties: {},
-            geometry: results.routes[0].geometry,
-          },
-        },
-        layout: {
-          'line-join': 'round',
-          'line-cap': 'round',
-        },
-        paint: {
-          'line-color': '#ff7e5f',
-          'line-width': 5,
-          'line-opacity': 0.75
-        },
-      })
+      this.drawRouteOnMap(results)
     });
-    this.calculateTaxiRoutes();
-
   }
 
-  createJourney() {
-    console.log(this.date);
-    this.dateFormat = this.date.split('T')[0];
-    var timeFormat = this.time.split('T')[1];
-    this.journey = {
-      startPoint: this.startPoint,
-      endPoint: this.endPoint,
-      date: this.dateFormat,
-      time: timeFormat,
-      numberOfPersons: this.numberOfPersons,
-      userID: this.currentUser.id
-    }
-    this.saveJourney(this.journey);
+  drawRouteOnMap(results) {
+    this.map.addLayer({
+      id: 'route',
+      type: 'line',
+      source: {
+        type: 'geojson',
+        data: {
+          type: 'Feature',
+          properties: {},
+          geometry: results.routes[0].geometry,
+        },
+      },
+      layout: {
+        'line-join': 'round',
+        'line-cap': 'round',
+      },
+      paint: {
+        'line-color': '#ff7e5f',
+        'line-width': 5,
+        'line-opacity': 0.75
+      },
+    })
   }
 
   async calculateTaxiRoutes() {
@@ -405,6 +367,11 @@ export class JourneyPage implements OnInit {
     this.price = this.completeDistance * 1.15
   }
 
+  roundNumbers() {
+    this.price = Math.round((this.price + Number.EPSILON) * 100) / 100
+    this.completeDistance = Math.round((this.completeDistance + Number.EPSILON) * 100) / 100
+  }
+
   calculateDiscountedPrice() {
     if (this.voucherCode != '') {
       this.kontoService.getVoucherById(this.voucherCode).subscribe((data) => {
@@ -440,9 +407,63 @@ export class JourneyPage implements OnInit {
     this.voucherCode = ''
   }
 
-  roundNumbers() {
-    this.price = Math.round((this.price + Number.EPSILON) * 100) / 100
-    this.completeDistance = Math.round((this.completeDistance + Number.EPSILON) * 100) / 100
+  selectOnlinePayment(event) {
+    this.selectedOption = event.detail.value;
+    if (this.selectedOption == "paypal") {
+      this.calculateTaxiRoutes();
+      this.paymentAmount = this.price;
+      this.visability = false;
+      let _this = this;
+      this.makeOnlinePayment(_this);
+    } else {
+      this.visability = true;
+    }
+  }
+
+  makeOnlinePayment(_this) {
+    setTimeout(() => {
+      window['paypal'].Buttons({
+        style: {
+          layout: "horizontal",
+          color: "gold",
+          shape: "rect",
+          label: "paypal"
+        },
+        createOrder: function (data, actions) {
+          return actions.order.create({
+            purchase_units: [{
+              amount: {
+                value: _this.paymentAmount
+              }
+            }]
+          });
+        },
+        onApprove: function (data, actions) {
+          return actions.order.capture()
+            .then(function (details) {
+              _this.createJourney();
+            })
+            .catch(err => {
+              console.log(err);
+            })
+        }
+      }).render('#paypal-button-container');
+    }, 500)
+  }
+
+  createJourney() {
+    console.log(this.date);
+    this.dateFormat = this.date.split('T')[0];
+    var timeFormat = this.time.split('T')[1];
+    this.journey = {
+      startPoint: this.startPoint,
+      endPoint: this.endPoint,
+      date: this.dateFormat,
+      time: timeFormat,
+      numberOfPersons: this.numberOfPersons,
+      userID: this.currentUser.id
+    }
+    this.saveJourney(this.journey);
   }
 
   saveJourney(journey) {
@@ -486,13 +507,13 @@ export class JourneyPage implements OnInit {
     this.distance_rounded = Math.round(taxiRoute.completeDistance)
   }
 
+  refactorStringToNumber() {
+    this.User.points = Number(this.User.points)
+  }
+
   calculatePoints() {
     this.points = this.distance_rounded * 1
     this.User.points = this.User.points + this.points
-  }
-
-  refactorStringToNumber() {
-    this.User.points = Number(this.User.points)
   }
 
   updateUser(currentUser) {
@@ -502,6 +523,7 @@ export class JourneyPage implements OnInit {
       })
     })
   }
+
   async createPopup() {
     const alert = await this.alertController.create({
       header: 'Vielen Dank!',
