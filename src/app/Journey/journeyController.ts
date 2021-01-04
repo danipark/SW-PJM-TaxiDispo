@@ -485,7 +485,7 @@ export class JourneyPage implements OnInit {
       this.createTaxiRoute(journeyID);
       this.saveTaxiRoute(this.taxiRoute);
       this.savePoints(this.taxiRoute, this.currentUser);
-      this.createPopup();
+      this.clearFieldsAndPresentPopup();
       console.log(res._id);
     });
   }
@@ -537,12 +537,8 @@ export class JourneyPage implements OnInit {
     })
   }
 
-  async createPopup() {
-    const alert = await this.alertController.create({
-      header: 'Vielen Dank!',
-      message: 'Ihr Taxi wurde erfolgreich gebucht. Die Kosten betragen: ' + this.price + "€",
-      buttons: ['OK']
-    });
+  clearFieldsAndPresentPopup() {
+    this.createPopupForSuccessfullBooking();
     this.clearVoucherField();
     this.geocoderstart.clear();
     (<HTMLInputElement>document.getElementsByClassName("mapboxgl-ctrl-geocoder--input")[1]).value = "";
@@ -552,6 +548,14 @@ export class JourneyPage implements OnInit {
     this.paymentType = "";
     this.price = 0;
     this.startPoint = "";
+  }
+
+  async createPopupForSuccessfullBooking(){
+    const alert = await this.alertController.create({
+      header: 'Vielen Dank!',
+      message: 'Ihr Taxi wurde erfolgreich gebucht. Die Kosten betragen: ' + this.price + "€",
+      buttons: ['OK']
+    });
     await alert.present();
   }
 }
