@@ -1,25 +1,28 @@
 <ion-header>
-  <ion-toolbar color="warning">
-    <ion-title>Login</ion-title>
-  </ion-toolbar>
+    <ion-toolbar color="warning">
+        <ion-title>Login</ion-title>
+    </ion-toolbar>
 </ion-header>
- 
+
 <ion-content padding>
-  
-      <form [formGroup]="credentialsForm" (ngSubmit)="onSubmit()">
- 
-    <ion-item>
-      <ion-label position="floating">Email</ion-label>
-      <ion-input type="email" formControlName="email"></ion-input>
-    </ion-item>
- 
-    <ion-item>
-      <ion-label position="floating">Password</ion-label>
-      <ion-input type="password" formControlName="password"></ion-input>
-    </ion-item>
- 
-    <ion-button color="warning" expand="full" type="submit" [disabled]="!credentialsForm.valid">Login</ion-button>
-    <ion-button color="warning" expand="full" type="button" (click)="register()">Register</ion-button>
- 
-  </form>
+    <ion-grid padding class="getStart">
+        <ion-col class="align-self-center" size-md="6" size-lg="5" size-xs="12"></ion-col>
+
+        <form class="form" [formGroup]="credentialsForm" (ngSubmit)="onSubmit()">
+
+            <ion-item>
+                <ion-label class="mail" position="floating">E-Mail</ion-label>
+                <ion-input type="email" formControlName="email"></ion-input>
+            </ion-item>
+
+            <ion-item>
+                <ion-label class="pw" position="floating">Password</ion-label>
+                <ion-input type="password" formControlName="password"></ion-input>
+            </ion-item>
+
+            <ion-button color="warning" class="button" expand="full" type="submit" [disabled]="!credentialsForm.valid">Login</ion-button>
+            <ion-button color="warning" class="button" expand="full" type="button" (click)="register()">Registrierung</ion-button>
+
+        </form>
+    </ion-grid>
 </ion-content>
