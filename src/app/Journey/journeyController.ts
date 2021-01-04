@@ -545,15 +545,13 @@ export class JourneyPage implements OnInit {
     });
     this.clearVoucherField();
     this.geocoderstart.clear();
-    this.geocoderziel.clear();
+    (<HTMLInputElement>document.getElementsByClassName("mapboxgl-ctrl-geocoder--input")[1]).value = "";
     this.date = "";
     this.time = "";
     this.numberOfPersons = 0;
     this.paymentType = "";
     this.price = 0;
-
+    this.startPoint = "";
     await alert.present();
   }
-
-
 }
