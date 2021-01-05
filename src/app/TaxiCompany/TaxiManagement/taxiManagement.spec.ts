@@ -1,3 +1,4 @@
+import { HttpClientModule } from '@angular/common/http';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
@@ -11,7 +12,7 @@ describe('TaxiManagementPage', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [TaxiManagementPage],
-      imports: [IonicModule.forRoot()]
+      imports: [IonicModule.forRoot(), HttpClientModule]
     }).compileComponents();
 
     fixture = TestBed.createComponent(TaxiManagementPage);

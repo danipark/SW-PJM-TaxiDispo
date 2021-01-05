@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl, FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import { environment } from 'src/environments/environment';
@@ -17,7 +17,10 @@ export class RegistrierungPage implements OnInit {
   selectedRadioGroup:any;
   geocoder: any;
 
-  constructor(private formBuilder: FormBuilder, private authService: AuthService) { }
+  constructor(
+    private formBuilder: FormBuilder, 
+    private authService: AuthService,
+    private formsModule: FormsModule) { }
  
   ngOnInit() {
     this.formForRegister();
