@@ -1,40 +1,37 @@
 <ion-header [translucent]="true">
     <ion-toolbar color="warning">
-      <ion-buttons slot="start">
-        <ion-menu-button></ion-menu-button>
-      </ion-buttons>
-        <ion-title>
-            Taxi verwalten
-        </ion-title>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title> Taxi verwalten </ion-title>
     </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
     <ion-item *ngFor="let Taxi of Taxis">
         <ion-label>
-          <h2>{{Taxi.taxiKennz}}</h2>
+            <h2>{{Taxi.taxiKennz}}</h2>
         </ion-label>
-  
+
         <div class="item-note" item-end>
-          <button ion-button clear (click)="updatePopup(Taxi)">
-            <ion-icon name="create" style="zoom:2.0"></ion-icon>
-          </button>
-          <button ion-button clear (click)="deleteTaxi(Taxi)">
-            <ion-icon name="trash" style="zoom:2.0"></ion-icon>
-          </button>
+            <button ion-button clear (click)="updatePopup(Taxi)">
+        <ion-icon name="create" style="zoom: 2"></ion-icon>
+      </button>
+            <button ion-button clear (click)="deleteTaxi(Taxi)">
+        <ion-icon name="trash" style="zoom: 2"></ion-icon>
+      </button>
         </div>
-      </ion-item>
-    </ion-content>
+    </ion-item>
+</ion-content>
 
 <ion-footer>
     <div>
         <ion-row>
             <ion-col col-15>
-                <ion-list style="text-align:center">
+                <ion-list style="text-align: center">
                     <ion-button (click)="hinzufuegenPopup()" color="warning">Taxi hinzufügen</ion-button>
                 </ion-list>
             </ion-col>
         </ion-row>
     </div>
-
 </ion-footer>
