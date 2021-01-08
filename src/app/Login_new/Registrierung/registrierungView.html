@@ -31,7 +31,7 @@
             </ion-item>
 
 
-            <ion-radio-group (ionChange)="radioGroupChange($event)">
+            <ion-radio-group (ionChange)="radioGroupChange($event)" formControlName="kunde">
                 <ion-list-header>
                     <ion-label>Privat oder Geschäftskunde?</ion-label>
                 </ion-list-header>
@@ -58,7 +58,7 @@
 
             </ion-col>
 
-            <ion-button color="warning" expand="full" type="submit">Registrierung</ion-button>
+            <ion-button color="warning" expand="full" type="submit" [disabled]="!registerForm.valid">Registrierung</ion-button>
 
         </form>
 

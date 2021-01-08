@@ -33,7 +33,7 @@ export class RegistrierungPage implements OnInit {
       password: ['', [Validators.required, Validators.minLength(6)]],
       firstName: ['', [Validators.required, Validators.minLength(2)]],
       lastName: ['', [Validators.required, Validators.minLength(2)]],
-      address: ['', [Validators.required, Validators.minLength(5)]],
+      kunde: ['', [Validators.required, Validators.minLength(1)]],
       points: [0]
     });
   }
