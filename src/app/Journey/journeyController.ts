@@ -1,19 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { environment } from 'src/environments/environment';
-
-//Import für Mapbox
 import * as Mapboxgl from 'mapbox-gl'
-
 import { MapboxServiceService, Feature } from './Services/mapbox-service.service';
-
 import { Geolocation, GeolocationOptions } from '@ionic-native/geolocation/ngx';
-
 import { HttpClient } from '@angular/common/http';
-
 import * as MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
-
 import { AlertController } from '@ionic/angular';
-
 import { TaxiService } from '../TaxiCompany/TaxiUnternehmen/Services/taxi.service';
 import { JourneyService } from './Services/journey.service';
 import { TaxirouteService } from '../TaxiCompany/TaxiManagement/Services/taxiroute.service';
@@ -21,14 +13,11 @@ import { AuthService } from '../Login_new/services/auth.service';
 import { KontoService } from '../Konto/Services/konto.service'
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 
-
-
 @Component({
   selector: 'app-Journey',
   templateUrl: 'journeyView.html',
   styleUrls: ['journey.scss']
 })
-
 
 
 export class JourneyPage implements OnInit {
@@ -67,15 +56,11 @@ export class JourneyPage implements OnInit {
   ) {
 
     this.currentUser = this.authService.user;
-
-    //User-Objekt 
     this.authService.getUser(this.currentUser.id).subscribe((res) => {
       this.User = res
     })
-    //Liste der Taxis
     this.taxiService.getTaxiList().subscribe((res) => {
       this.Taxis = res;
-      console.log(this.Taxis)
     });
   }
 
@@ -174,9 +159,9 @@ export class JourneyPage implements OnInit {
   createMapboxMap() {
     this.map = new Mapboxgl.Map({
       accessToken: environment.mapboxKey,
-      container: 'map', // container id
+      container: 'map',
       style: 'mapbox://styles/mapbox/streets-v11',
-      center: [this.longitude, this.latitude], // LNG, LAT
+      center: [this.longitude, this.latitude],
       zoom: 14 // starting zoom
     });
   }
@@ -550,7 +535,7 @@ export class JourneyPage implements OnInit {
     this.startPoint = "";
   }
 
-  async createPopupForSuccessfullBooking(){
+  async createPopupForSuccessfullBooking() {
     const alert = await this.alertController.create({
       header: 'Vielen Dank!',
       message: 'Ihr Taxi wurde erfolgreich gebucht. Die Kosten betragen: ' + this.price + "€",

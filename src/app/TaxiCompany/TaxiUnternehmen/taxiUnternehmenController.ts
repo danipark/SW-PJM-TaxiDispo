@@ -22,11 +22,10 @@ export class TaxiUnternehmenPage {
     private router: Router,
     public fb: FormBuilder,
     private zone: NgZone
-  ) {}
+  ) { }
 
   ionViewDidEnter() {
     this.taxiService.getTaxiList().subscribe((res) => {
-      console.log(res);
       this.Taxis = res;
     });
   }
@@ -65,7 +64,7 @@ export class TaxiUnternehmenPage {
           text: "Cancel",
           role: "cancel",
           cssClass: "secondary",
-          handler: () => {},
+          handler: () => { },
         },
         {
           text: "Ok",
@@ -85,7 +84,6 @@ export class TaxiUnternehmenPage {
       ],
     });
     await alert.present();
-    //exception muss noch abgefangen werden, wenn alert leer ist
   }
 
   taxiHinzufuegen() {
@@ -99,8 +97,6 @@ export class TaxiUnternehmenPage {
   }
 
   async updatePopup(Taxi) {
-    console.log(Taxi);
-
     const alert = await this.alertController.create({
       header: "Taxi bearbeiten",
       inputs: [
@@ -134,7 +130,7 @@ export class TaxiUnternehmenPage {
           text: "Cancel",
           role: "cancel",
           cssClass: "secondary",
-          handler: () => {},
+          handler: () => { },
         },
         {
           text: "Ok",

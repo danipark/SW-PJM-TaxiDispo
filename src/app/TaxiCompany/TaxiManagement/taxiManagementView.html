@@ -8,16 +8,12 @@
         </ion-title>
     </ion-toolbar>
 </ion-header>
-
-
 <ion-content [fullscreen]="true">
     <ion-header collapse="condense">
         <ion-toolbar>
             <ion-title size="large">Dashboard</ion-title>
         </ion-toolbar>
     </ion-header>
-
-
     <ion-list-header color="light">Kilometer-Dashboard</ion-list-header>
     <ion-card>
         <ion-card-header>
@@ -25,9 +21,9 @@
             <ion-card-title>2020</ion-card-title>
         </ion-card-header>
         von <select [(ngModel)]="fromMonth" style="width: 150px; height: 30px;">
-          <option *ngFor="let m of months" [value]="m.value">{{m.month}}</option>
+            <option *ngFor="let m of months" [value]="m.value">{{m.month}}</option>
         </select> bis <select [(ngModel)]="toMonth" style="width: 150px;height: 30px;">
-          <option *ngFor="let m1 of months" [value]='m1.value'>{{m1.month}}</option>
+            <option *ngFor="let m1 of months" [value]='m1.value'>{{m1.month}}</option>
         </select><br>
         <ion-button color="warning" style="width: 150px; height: 30px;" (click)="applyMonthFilterBarChartKM()">
             Monatsfilter
@@ -44,9 +40,9 @@
             <ion-card-title>2020</ion-card-title>
         </ion-card-header>
         von <select [(ngModel)]="fromMonth" style="width: 150px; height: 30px;">
-          <option *ngFor="let m of months" [value]="m.value">{{m.month}}</option>
+            <option *ngFor="let m of months" [value]="m.value">{{m.month}}</option>
         </select> bis <select [(ngModel)]="toMonth" style="width: 150px;height: 30px;">
-          <option *ngFor="let m1 of months" [value]='m1.value'>{{m1.month}}</option>
+            <option *ngFor="let m1 of months" [value]='m1.value'>{{m1.month}}</option>
         </select><br>
         <ion-button color="warning" style="width: 150px; height: 30px;" (click)="applyMonthFilterBarChartSales()">
             Monatsfilter
@@ -67,8 +63,4 @@
     <br>
     <br>
     <br>
-
-
-
-
 </ion-content>

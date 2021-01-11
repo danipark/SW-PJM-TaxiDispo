@@ -8,7 +8,6 @@
         </ion-title>
     </ion-toolbar>
 </ion-header>
-
 <ion-content [fullscreen]="true">
     <ion-header collapse="condense">
         <ion-toolbar>
@@ -16,12 +15,9 @@
         </ion-toolbar>
     </ion-header>
     <section class="map_box_container">
-        <!--MAP-->
         <div id='map'></div>
     </section>
-
 </ion-content>
-
 <ion-content>
     <form [formGroup]="journeyForm">
         <ion-grid>
@@ -67,7 +63,8 @@
             <ion-row>
                 <ion-col offset=4 size=4>
                     <ion-item class="Voucher">
-                        <ion-input (ionBlur)="calculateDiscountedPrice()" [(ngModel)]="voucherCode" [ngModelOptions]="{standalone: true}" placeholder="Gutscheincode"></ion-input>
+                        <ion-input (ionBlur)="calculateDiscountedPrice()" [(ngModel)]="voucherCode"
+                            [ngModelOptions]="{standalone: true}" placeholder="Gutscheincode"></ion-input>
                     </ion-item>
                 </ion-col>
             </ion-row>
@@ -88,7 +85,6 @@
                 </ion-col>
             </ion-row>
             <div *ngIf="selectedOption === 'paypal'" class=PayPal id="paypal-button-container"></div>
-
             <ion-row>
                 <ion-col offset=4 size=4>
                     <ion-button type="submit" class="Buchen" *ngIf="visability" (click)="createJourney()"

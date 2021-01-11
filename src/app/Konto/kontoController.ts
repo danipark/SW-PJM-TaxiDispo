@@ -34,7 +34,7 @@ export class KontoPage {
     private authService: AuthService,
     public alertController: AlertController,
     private kontoService: KontoService
-  ) {}
+  ) { }
 
   ionViewWillEnter() {
     this.currentUser = this.authService.user;
@@ -165,7 +165,7 @@ export class KontoPage {
             text: "Cancel",
             role: "cancel",
             cssClass: "secondary",
-            handler: () => {},
+            handler: () => { },
           },
           {
             text: "Gutschein-Code generieren",
@@ -208,7 +208,7 @@ export class KontoPage {
           text: "Ok",
           role: "cancel",
           cssClass: "secondary",
-          handler: () => {},
+          handler: () => { },
         },
       ],
     });
@@ -225,7 +225,7 @@ export class KontoPage {
           text: "Cancel",
           role: "cancel",
           cssClass: "secondary",
-          handler: () => {},
+          handler: () => { },
         },
       ],
     });

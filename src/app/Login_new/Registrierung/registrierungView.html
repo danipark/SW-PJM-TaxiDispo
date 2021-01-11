@@ -3,64 +3,48 @@
         <ion-title>Registrierung</ion-title>
     </ion-toolbar>
 </ion-header>
-
 <ion-content padding>
     <ion-grid padding class="getStart">
         <ion-col class="align-self-center" size-md="6" size-lg="5" size-xs="12"></ion-col>
-
         <form class="form" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-
             <ion-item>
                 <ion-label class="mail" position="floating">Email</ion-label>
                 <ion-input type="email" formControlName="email"></ion-input>
             </ion-item>
-
             <ion-item>
                 <ion-label class="pw" position="floating">Password</ion-label>
                 <ion-input type="password" formControlName="password"></ion-input>
             </ion-item>
-
             <ion-item>
                 <ion-label position="floating">Vorname</ion-label>
                 <ion-input formControlName="firstName"></ion-input>
             </ion-item>
-
             <ion-item>
                 <ion-label position="floating">Nachname</ion-label>
                 <ion-input formControlName="lastName"></ion-input>
             </ion-item>
-
-
             <ion-radio-group (ionChange)="radioGroupChange($event)" formControlName="kunde">
                 <ion-list-header>
                     <ion-label>Privat oder Geschäftskunde?</ion-label>
                 </ion-list-header>
-
                 <ion-item>
                     <ion-label>Privatkunde</ion-label>
                     <ion-radio color="warning" slot="start" value="Privatkunde"></ion-radio>
                 </ion-item>
-
                 <ion-item>
                     <ion-label>Geschäftskunde</ion-label>
                     <ion-radio color="warning" slot="start" value="Geschäftskunde"></ion-radio>
                 </ion-item>
             </ion-radio-group>
-
             <ion-item *ngIf="selectedRadioGroup === 'Geschäftskunde'">
                 <ion-label position="floating">Unternehmensname</ion-label>
                 <ion-input formControlName="companyName"></ion-input>
             </ion-item>
-
             <ion-col>
-
                 <div id="geocoder" class="geocoder"></div>
-
             </ion-col>
-
-            <ion-button color="warning" expand="full" type="submit" [disabled]="!registerForm.valid">Registrierung</ion-button>
-
+            <ion-button color="warning" expand="full" type="submit" [disabled]="!registerForm.valid">Registrierung
+            </ion-button>
         </form>
-
     </ion-grid>
 </ion-content>

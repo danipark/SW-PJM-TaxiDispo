@@ -9,16 +9,16 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./login.scss'],
 })
 export class LoginPage implements OnInit {
- 
-  credentialsForm: FormGroup;
- 
-  constructor(
-    private formBuilder: FormBuilder, 
-    private authService: AuthService,
-    private navCtrl: NavController) { 
 
-    }
- 
+  credentialsForm: FormGroup;
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private authService: AuthService,
+    private navCtrl: NavController) {
+
+  }
+
   ngOnInit() {
     this.authService.logout();
     this.credentialsForm = this.formBuilder.group({
@@ -26,13 +26,13 @@ export class LoginPage implements OnInit {
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
- 
+
   onSubmit() {
     this.authService.login(this.credentialsForm.value).subscribe();
   }
- 
+
   register() {
     this.navCtrl.navigateForward('/registrierung')
   }
- 
+
 }

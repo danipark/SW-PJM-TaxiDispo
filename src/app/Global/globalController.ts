@@ -9,7 +9,7 @@ import { NavController } from '@ionic/angular';
 })
 export class GlobalPage implements OnInit {
 
-   currentUser: any;
+  currentUser: any;
 
   constructor(
     private authService: AuthService,
@@ -18,10 +18,10 @@ export class GlobalPage implements OnInit {
     this.currentUser = this.authService.user;
   }
 
-  ngOnInit(){
+  ngOnInit() {
     // Navigation zu den Pages, die für den angemeldeten Benutzer relevant sind  
     if (this.currentUser.role === 'customer' || this.currentUser.role === 'businessCustomer') {
-      this.navCtrl.navigateForward('/TaxiDispo/journey');  
+      this.navCtrl.navigateForward('/TaxiDispo/journey');
     } else {
       this.navCtrl.navigateForward('/TaxiDispo/taxiUnternehmen');
     }

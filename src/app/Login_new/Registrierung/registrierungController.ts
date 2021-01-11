@@ -12,16 +12,16 @@ import * as Mapboxgl from 'mapbox-gl'
 })
 export class RegistrierungPage implements OnInit {
 
-  
+
   registerForm: FormGroup;
-  selectedRadioGroup:any;
+  selectedRadioGroup: any;
   geocoder: any;
 
   constructor(
-    private formBuilder: FormBuilder, 
+    private formBuilder: FormBuilder,
     private authService: AuthService,
     private formsModule: FormsModule) { }
- 
+
   ngOnInit() {
     this.formForRegister();
     this.geocoderForAddress();
@@ -58,9 +58,9 @@ export class RegistrierungPage implements OnInit {
   }
 
   selectBusinessCustomer() {
-      this.registerForm.addControl('role', new FormControl('', Validators.required));
-      this.registerForm.controls['role'].setValue('businessCustomer')
-      this.registerForm.addControl('companyName', new FormControl('', Validators.required));
+    this.registerForm.addControl('role', new FormControl('', Validators.required));
+    this.registerForm.controls['role'].setValue('businessCustomer')
+    this.registerForm.addControl('companyName', new FormControl('', Validators.required));
   }
 
   selectPrivateCustomer() {

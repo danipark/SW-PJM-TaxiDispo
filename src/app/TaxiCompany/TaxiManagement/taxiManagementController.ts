@@ -180,8 +180,8 @@ export class TaxiManagementPage implements OnInit {
           data: [this.janKM, this.febKM, this.maeKM, this.aprKM,
           this.maiKM, this.junKM, this.julKM, this.augKM, this.sepKM,
           this.oktKM, this.novKM, this.dezKM],
-          backgroundColor: this.colorPies, // array should have same number of elements as number of dataset
-          borderColor: this.colorPies,// array should have same number of elements as number of dataset
+          backgroundColor: this.colorPies,
+          borderColor: this.colorPies,
           borderWidth: 1
         }]
       },
@@ -205,8 +205,8 @@ export class TaxiManagementPage implements OnInit {
         datasets: [{
           label: 'in €',
           data: [this.janSales, this.febSales, this.maeSales, this.aprSales, this.maiSales, this.junSales, this.julSales, this.augSales, this.sepSales, this.oktSales, this.novSales, this.dezSales],
-          backgroundColor: this.colorPies, // array should have same number of elements as number of dataset
-          borderColor: this.colorPies,// array should have same number of elements as number of dataset
+          backgroundColor: this.colorPies,
+          borderColor: this.colorPies,
           borderWidth: 1
         }]
       },
@@ -236,8 +236,8 @@ export class TaxiManagementPage implements OnInit {
           (this.augSales / this.totalSales) * 100, (this.sepSales / this.totalSales) * 100,
           (this.oktSales / this.totalSales) * 100, (this.novSales / this.totalSales) * 100,
           (this.dezSales / this.totalSales) * 100],
-          backgroundColor: this.colorPies, // array should have same number of elements as number of dataset
-          borderColor: this.colorPies,// array should have same number of elements as number of dataset
+          backgroundColor: this.colorPies,
+          borderColor: this.colorPies,
           borderWidth: 1
         }]
       },
@@ -327,7 +327,6 @@ export class TaxiManagementPage implements OnInit {
         case this.dez:
           this.dezSales = this.dezSales + this.salesArray[i].price;
           break;
-
       }
       this.totalSales = this.janSales + this.febSales +
         this.maeSales + this.aprSales + this.maiSales +
@@ -388,7 +387,6 @@ export class TaxiManagementPage implements OnInit {
         case this.dez:
           this.dezKM = this.dezKM + this.kmArray[i].completeDistance;
           break;
-
       }
       this.totalKM = this.janKM + this.febKM +
         this.maeKM + this.aprKM + this.maiKM +
@@ -397,6 +395,5 @@ export class TaxiManagementPage implements OnInit {
         this.novKM + this.dezKM
     }
   }
-
 }
 
