@@ -24,7 +24,6 @@ describe('AppComponent', () => {
     platformSpy = jasmine.createSpyObj('Platform', { ready: platformReadySpy });
     jwtHelperSpy = jasmine.createSpy('JwtHelperService');
     jwtOptionsSpy = jasmine.createSpy('JWT_OPTIONS');
-    storageSpy = jasmine.createSpy('Storage');
     routerSpy = jasmine.createSpy('Router');
 
     TestBed.configureTestingModule({
@@ -41,6 +40,20 @@ describe('AppComponent', () => {
         { provide: Router, useValue: routerSpy}
       ],
     }).compileComponents();
+
+    var localStorage = window.localStorage;
+    var store = {};
+
+    spyOn(localStorage, 'getItem').and.callFake(function (key) {
+      return store[key];
+    });
+    spyOn(localStorage, 'setItem').and.callFake(function (key, value) {
+      return store[key] = value + '';
+    });
+    spyOn(localStorage, 'clear').and.callFake(function () {
+        store = {};
+    });
+
   }));
 
   it('should create the app', () => {

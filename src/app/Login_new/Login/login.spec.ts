@@ -18,7 +18,6 @@ describe('LoginPage', () => {
     geolocationSpy = jasmine.createSpy('Geolocation')
     jwtHelperSpy = jasmine.createSpy('JwtHelperService');
     jwtOptionsSpy = jasmine.createSpy('JWT_OPTIONS');
-    storageSpy = jasmine.createSpy('Storage');
     formBuilderSpy = jasmine.createSpy('FormBuilder')
     urlSerializerSpy = jasmine.createSpy('UrlSerializer')
 
@@ -38,6 +37,34 @@ describe('LoginPage', () => {
     fixture = TestBed.createComponent(LoginPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
+
+    var localStorage = window.localStorage;
+    let store = {};
+    const mockLocalStorage = {
+      getItem: (key: string): string => {
+        return key in store ? store[key] : null;
+      },
+      setItem: (key: string, value: string) => {
+        store[key] = `${value}`;
+      },
+      removeItem: (key: string) => {
+        delete store[key];
+      },
+      clear: () => {
+        store = {};
+      }
+    };
+    spyOn(localStorage, 'getItem')
+      .and.callFake(mockLocalStorage.getItem);
+    spyOn(localStorage, 'setItem')
+      .and.callFake(mockLocalStorage.setItem);
+    spyOn(localStorage, 'removeItem')
+      .and.callFake(mockLocalStorage.removeItem);
+    spyOn(localStorage, 'clear')
+      .and.callFake(mockLocalStorage.clear);
+
+    component = TestBed.inject(LoginPage);
+
   }));
 
   it('should create', () => {

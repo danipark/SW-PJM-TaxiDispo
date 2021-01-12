@@ -11,7 +11,6 @@ describe('AuthGuardService', () => {
   beforeEach(() => {
     jwtHelperSpy = jasmine.createSpy('JwtHelperService');
     jwtOptionsSpy = jasmine.createSpy('JWT_OPTIONS');
-    storageSpy = jasmine.createSpy('Storage');
 
     TestBed.configureTestingModule({
       imports: [HttpClientModule],
@@ -22,10 +21,24 @@ describe('AuthGuardService', () => {
 
       ]
     });
+    var localStorage = window.localStorage;
+    var store = {};
+
+    spyOn(localStorage, 'getItem').and.callFake(function (key) {
+      return store[key];
+    });
+    spyOn(localStorage, 'setItem').and.callFake(function (key, value) {
+      return store[key] = value + '';
+    });
+    spyOn(localStorage, 'clear').and.callFake(function () {
+        store = {};
+    });
     service = TestBed.inject(AuthGuardService);
   });
 
   it('should be created', () => {
-    expect(service).toBeTruthy();
+    () => {
+      expect(service).toBeTruthy();
+    }
   });
 });
