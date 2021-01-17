@@ -28,6 +28,7 @@ export class TaxiUnternehmenPage {
     this.taxiService.getTaxiList().subscribe((res) => {
       this.Taxis = res;
     });
+    return this.Taxis;
   }
 
   async hinzufuegenPopup() {

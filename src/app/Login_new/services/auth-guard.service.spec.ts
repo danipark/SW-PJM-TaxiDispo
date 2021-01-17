@@ -7,7 +7,9 @@ import { AuthGuardService } from './auth-guard.service';
 describe('AuthGuardService', () => {
   let service: AuthGuardService;
   let jwtHelperSpy, jwtOptionsSpy, storageSpy;
-  
+  const storageIonicMock: any = {
+    get: () => new Promise<any>((resolve, reject) => resolve('As2342fAfgsdr'))
+  }
   beforeEach(() => {
     jwtHelperSpy = jasmine.createSpy('JwtHelperService');
     jwtOptionsSpy = jasmine.createSpy('JWT_OPTIONS');
@@ -17,21 +19,9 @@ describe('AuthGuardService', () => {
       providers: [
         { provide: JWT_OPTIONS, useValue: jwtOptionsSpy},
         { provide: JwtHelperService, useValue: jwtHelperSpy},
-        { provide: Storage, useValue: storageSpy},
+        { provide: Storage, useValue: storageIonicMock},
 
       ]
-    });
-    var localStorage = window.localStorage;
-    var store = {};
-
-    spyOn(localStorage, 'getItem').and.callFake(function (key) {
-      return store[key];
-    });
-    spyOn(localStorage, 'setItem').and.callFake(function (key, value) {
-      return store[key] = value + '';
-    });
-    spyOn(localStorage, 'clear').and.callFake(function () {
-        store = {};
     });
     service = TestBed.inject(AuthGuardService);
   });

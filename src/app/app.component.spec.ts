@@ -1,6 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TestBed, async } from '@angular/core/testing';
-
 import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
@@ -11,13 +10,14 @@ import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
 
 describe('AppComponent', () => {
-
   let statusBarSpy, splashScreenSpy, platformReadySpy, 
   platformSpy, jwtOptionsSpy, jwtHelperSpy, storageSpy,
   routerSpy;
 
   beforeEach(async(() => {
-    
+    const storageIonicMock: any = {
+      get: () => new Promise<any>((resolve, reject) => resolve('As2342fAfgsdr'))
+    }
     statusBarSpy = jasmine.createSpyObj('StatusBar', ['styleDefault']);
     splashScreenSpy = jasmine.createSpyObj('SplashScreen', ['hide']);
     platformReadySpy = Promise.resolve();
@@ -36,24 +36,10 @@ describe('AppComponent', () => {
         { provide: Platform, useValue: platformSpy },
         { provide: JWT_OPTIONS, useValue: jwtOptionsSpy},
         { provide: JwtHelperService, useValue: jwtHelperSpy},
-        { provide: Storage, useValue: storageSpy},
+        { provide: Storage, useValue: storageIonicMock},
         { provide: Router, useValue: routerSpy}
       ],
     }).compileComponents();
-
-    var localStorage = window.localStorage;
-    var store = {};
-
-    spyOn(localStorage, 'getItem').and.callFake(function (key) {
-      return store[key];
-    });
-    spyOn(localStorage, 'setItem').and.callFake(function (key, value) {
-      return store[key] = value + '';
-    });
-    spyOn(localStorage, 'clear').and.callFake(function () {
-        store = {};
-    });
-
   }));
 
   it('should create the app', () => {
@@ -69,7 +55,5 @@ describe('AppComponent', () => {
     expect(statusBarSpy.styleDefault).toHaveBeenCalled();
     expect(splashScreenSpy.hide).toHaveBeenCalled();
   });
-
-  // TODO: add more tests!
 
 });

@@ -29,7 +29,15 @@ describe("TaxiUnternehmenPage", () => {
     fixture.detectChanges();
   }));
 
-  it("should create", () => {
+  it("should be created", () => {
     expect(component).toBeTruthy();
   });
+
+  it("should return an empty Taxi array", () => {
+    let taxis = component.Taxis;
+    expect(Array.isArray(taxis)).toBeTruthy;
+    expect(taxis.length).toBe(0);
+
+  });
+
 });
