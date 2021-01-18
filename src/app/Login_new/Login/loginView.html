@@ -15,7 +15,7 @@
                 <ion-label class="pw" position="floating">Password</ion-label>
                 <ion-input type="password" formControlName="password"></ion-input>
             </ion-item>
-            <ion-button color="warning" class="button" expand="full" type="submit" [disabled]="!credentialsForm.valid">
+            <ion-button id="submitButton" color="warning" class="button" expand="full" type="submit" [disabled]="!credentialsForm.valid">
                 Login</ion-button>
             <ion-button color="warning" class="button" expand="full" type="button" (click)="register()">Registrierung
             </ion-button>
