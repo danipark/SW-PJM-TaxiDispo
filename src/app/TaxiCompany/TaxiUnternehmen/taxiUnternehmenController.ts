@@ -68,7 +68,7 @@ export class TaxiUnternehmenPage {
           handler: () => { },
         },
         {
-          text: "Ok",
+          text: "Taxi speichern",
           handler: async () => {
             let result = await alert.onDidDismiss();
             this.taxi = {
