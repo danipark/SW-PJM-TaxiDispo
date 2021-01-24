@@ -421,12 +421,7 @@ export class JourneyPage implements OnInit {
   makeOnlinePayment(_this) {
     setTimeout(() => {
       window['paypal'].Buttons({
-        style: {
-          layout: "horizontal",
-          color: "gold",
-          shape: "rect",
-          label: "paypal"
-        },
+        style: {},
         createOrder: function (data, actions) {
           return actions.order.create({
             purchase_units: [{
