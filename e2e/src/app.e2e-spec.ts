@@ -152,31 +152,7 @@ describe('Integrationstest: Einloggen als Mitarbeiter und hinzufügen eines Taxi
       expect(login.getTitle()).toContain('Login');
     });
   })
-
-  /* describe('US2: Als Kunde möchte ich meinen Startpunkt flexibel auswählen können', () => {
-    it('Ausfüllen aller benötigter Felder (Testszenario 1)', () => {
-      login.enterEMail('danielkleinen@gmail.com');
-      login.enterPassword('admin1');
-      login.clickSignIn();
-      browser.wait(ExpectedConditions.urlContains('http://localhost:4200/TaxiDispo/journey'), 3000);
-      expect(element(by.css('geocoderziel'))).toBeTruthy();
-      browser.sleep(1000);
-      //var menuToggleButton = element(by.className('buttons-first-slot sc-ion-buttons-md-h sc-ion-buttons-md-s md hydrated'));
-      // menuToggleButton.click();
-      //  browser.actions().mouseMove(element(by.css('geocoderziel')));
-      //  element(by.css('geocoderziel')).click();
-      element(by.css('.mapboxgl-ctrl-geocoder--input')).getWebElement().sendKeys('Furtwangen');
-      //journey.autoCompleteSearch('Furtwangen', 1);   
-      //  journey.getZielpunktInputFeld().sendKeys('Vöhrenbach');
-
-      //journey.getDatumInputField().sendKeys('2020-02-01');
-      //  element(by.id('menuButton')).getWebElement().click();
-      browser.sleep(1000);
-
-    });
-
-
-  }); */
+  
    describe('Als Mitarbeiter möchte ich ein Taxi hinzufügen können', () => {
     it('Taxi hinzufügen', async () => {
       login.enterEMail('taxidispo@web.de');

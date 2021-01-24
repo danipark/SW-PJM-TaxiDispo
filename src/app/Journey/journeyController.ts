@@ -9,7 +9,7 @@ import { AlertController } from '@ionic/angular';
 import { TaxiService } from '../TaxiCompany/TaxiUnternehmen/Services/taxi.service';
 import { JourneyService } from './Services/journey.service';
 import { TaxirouteService } from '../TaxiCompany/TaxiManagement/Services/taxiroute.service';
-import { AuthService } from '../Login_new/services/auth.service';
+import { AuthService } from '../User/services/auth.service';
 import { KontoService } from '../Konto/Services/konto.service'
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 

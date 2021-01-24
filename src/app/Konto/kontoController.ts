@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { TaxirouteService } from "../TaxiCompany/TaxiManagement/Services/taxiroute.service";
 import { JourneyService } from "../Journey/Services/journey.service";
-import { AuthService } from "../Login_new/services/auth.service";
+import { AuthService } from "../User/services/auth.service";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import { AlertController } from "@ionic/angular";

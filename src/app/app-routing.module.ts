@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { AuthGuardService } from './Login_new/services/auth-guard.service';
+import { AuthGuardService } from './User/services/auth-guard.service';
 const routes: Routes = [
 
   { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: 'login', loadChildren: './Login_new/Login/login.module#LoginPageModule'},
+  { path: 'login', loadChildren: './User/Login/login.module#LoginPageModule'},
   { path: 'global', 
     loadChildren: './Global/global.module#GlobalPageModule',
     canActivate: [AuthGuardService]
@@ -13,7 +13,7 @@ const routes: Routes = [
     loadChildren: './Global/global.module#GlobalPageModule' },
   {
     path: 'registrierung',
-    loadChildren: () => import('./Login_new/Registrierung/registrierung.module').then( m => m.RegistrierungPageModule)
+    loadChildren: () => import('./User/Registrierung/registrierung.module').then( m => m.RegistrierungPageModule)
   },
 
 ];
